@@ -19,5 +19,8 @@ public class Card {
         return cardElement.getValue();
     }
 
+    public String getCardInfo() {
+        return cardElement.getKey().toString() + " " + cardElement.getValue().toString();
+    }
     Pair<Integer, Integer>cardElement;
 }
