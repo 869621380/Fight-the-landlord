@@ -19,8 +19,10 @@ public class Card {
         return cardElement.getValue();
     }
 
+    //牌面信息输出
     public String getCardInfo() {
         return cardElement.getKey().toString() + " " + cardElement.getValue().toString();
     }
-    Pair<Integer, Integer>cardElement;
+
+    private Pair<Integer, Integer>cardElement;
 }
