@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Player {
     //无参初始化
-    public Player(){
-        this.deck = new ArrayList<>();
+    public Player(ArrayList<Card>theDeck){
+        this.deck = new ArrayList<>(theDeck);
         identity=0;
     }
 
@@ -21,6 +21,17 @@ public class Player {
         deck.add(newCard);
     }
 
+    int showScore(){
+        int score=getScore();
+        //界面操作
+        return score;
+    }
+
+    //
+    int getScore(){
+        return 0;
+    }
+
     //设置身份农民 or 地主
     void setIdentity(int theIdentity){
         identity=theIdentity;
@@ -31,21 +42,9 @@ public class Player {
         return identity;
     }
 
-    //在分排结束后对卡组进行排序
-    void cardSorted(){
-        this.deck.sort((p1, p2) -> {
-            int sizeComparison = Integer.compare(p1.getSize(), p2.getSize());
-            if (sizeComparison != 0) {
-                return sizeComparison;
-            } else {
-                return Integer.compare(p1.getSuit(), p2.getSuit());
-            }
-        });
-    }
-
     //玩家类型 1：地主 2：农民 0:未定义
-    int identity;
+    private int identity;
     //玩家手中卡组//个人认为访问量更多采用ArrayList
-    ArrayList<Card> deck;
+    private ArrayList<Card> deck;
 
 }
