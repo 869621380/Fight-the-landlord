@@ -97,6 +97,12 @@ public class Deck {
     }
     //首发选中牌面合理性检验
     private boolean reasonablenessTest(){
+        int []cardSize=new int[15];
+        for(Card card:deck){
+            cardSize[card.getSize()]++;
+        }
+        int numOfOne=0,numOfTwo=0,numOfTree=0,numOfFour=0;
+
         return false;
     }
     //根据类型检验能否压过上一张牌

@@ -44,7 +44,7 @@ public class server_gameRound {
         while(true){
             //接收出的牌
             sendToOne(i,"请你出牌");
-            ArrayList<Card> r = reserveCard(i);
+            ArrayList<Card> r = receiveCard(i);
             if (r != null) {
                 for (Card x : players.get(i).getPlayerCard()) {
                     Iterator<Card> rIterator = r.iterator();
@@ -287,7 +287,7 @@ public class server_gameRound {
     /**
      * 接受牌
      */
-    public ArrayList<Card> reserveCard(int i) {
+    public ArrayList<Card> receiveCard(int i) {
         ArrayList<Card> cards = new ArrayList<>();
         int tem = Integer.parseInt(players.get(i).receiveMsg());
         for (int j = 0; j < tem; j++) {

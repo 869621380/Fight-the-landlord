@@ -1,10 +1,13 @@
 package com.example.fightthelandlord;
 import java.util.ArrayList;
-
-
+import java.util.Iterator;
 
 
 public class Player {
+    public Player(){
+        this.deck = new ArrayList<>();
+        identity=0;
+    }
     //无参初始化
     public Player(ArrayList<Card>theDeck){
         this.deck = new ArrayList<>(theDeck);
@@ -16,9 +19,11 @@ public class Player {
         return deck.size();
     }
 
-    //发牌阶段插入卡牌
-    void insertCard(Card newCard){
-        deck.add(newCard);
+    //接收卡牌
+    void receiveCard(ArrayList<Card>deck){
+        for (Card card : deck) {
+            this.deck.add(card);
+        }
     }
 
     int showScore(){
