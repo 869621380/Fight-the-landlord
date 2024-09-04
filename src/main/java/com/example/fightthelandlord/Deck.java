@@ -68,6 +68,39 @@ public class Deck {
         if(lastNumber!= deck.size())
             return false;
         //type检验
+        return typeCheck();
+    }
+
+    //添加新卡牌
+    public void add(Card card){
+      deck.add(card);
+    }
+
+    //删除卡牌
+    public void delete(Card card){
+        deck.remove(card);
+    }
+
+    //出牌后返回卡组类型
+    public int getDeckType(){
+        return deckType;
+    }
+
+    //出牌后返回卡组大小
+    public int getSize(){
+        return size;
+    }
+
+    //出牌后返回卡组卡牌数目
+    public int getNumber(){
+        return number;
+    }
+    //首发选中牌面合理性检验
+    private boolean reasonablenessTest(){
+        return false;
+    }
+    //根据类型检验能否压过上一张牌
+    private boolean typeCheck(){
         int []cardSize=new int[15];
         for(Card card:deck){
             cardSize[card.getSize()]++;
@@ -103,7 +136,6 @@ public class Deck {
             }
             //三带一
             case 4:{
-                //表示卡组大小
                 int size=-1;
                 int firstSize=deck.first().getSize();
                 int finalSize=deck.last().getSize();
@@ -120,15 +152,51 @@ public class Deck {
                 else return false;
 
             }
+            //三带二
             case 5:{
-
-
+                boolean twoNumRight=false;
+                boolean threeNumRight=false;
+                int size=-1;
+                for(int i=0;i<=14;i++){
+                    if(cardSize[i]==3)threeNumRight=true;
+                    else if(cardSize[i]==2)twoNumRight=true;
+                }
+                if((threeNumRight==twoNumRight)&&twoNumRight&&size>lastSize){
+                    updateDate(5,size,5);
+                    return true;
+                }
+                return false;
             }
+            //顺子5~11
             case 6:{
-
+                int firstSize=deck.first().getSize();
+                int size=deck.size();
+                for(int i=firstSize;i<size+firstSize;++i){
+                    if(cardSize[i]!=1){
+                        return false;
+                    }
+                }
+                if(firstSize>lastSize){
+                    updateDate(6,firstSize,size);
+                    return true;
+                }
+                return false;
             }
+            //连对6、8、10、12、14、16
             case 7:{
-
+                int firstSize=deck.first().getSize();
+                int size=deck.size(),temp=firstSize;
+                for(int i=0;i<size/2;i++){
+                    if(cardSize[temp]!=2){
+                        return false;
+                    }
+                    temp++;
+                }
+                if(firstSize>lastSize){
+                    updateDate(7,firstSize,size);
+                    return true;
+                }
+                return false;
             }
             //三三 三三带一一
             case 8: case 9:{
@@ -154,26 +222,49 @@ public class Deck {
                         twoNumRight++;
                     }
                     else if(cardSize[i]==3&&!threeNumRight){
-                            if(cardSize[i+1]==3){
-                                threeNumRight=true;
-                                size=i;
-                            }
-                            else return false;
+                        if(cardSize[i+1]==3){
+                            threeNumRight=true;
+                            size=i;
+                        }
+                        else return false;
                     }
                 }
                 if(twoNumRight==2&&threeNumRight){
                     updateDate(10,size,8);
                 }
             }
-
+            //三三三带一一一
             case 11:{
-
+                for(int i=0;i<13;i++){
+                    if(cardSize[i]==3){
+                        if(cardSize[i+1]==3&&cardSize[i+2]==3&&i>lastSize){
+                            updateDate(11,i,lastNumber);
+                            return true;
+                        }
+                        else return false;
+                    }
+                }
+                return false;
             }
-
+            //三三三带二二二
             case 12:{
-
-
-
+                int twoNumRight=0,size=-1;
+                boolean threeNumRight=false;
+                for(int i=0;i<13;i++){
+                    if(cardSize[i]==3){
+                        if(cardSize[i+1]==3&&cardSize[i+2]==3) {
+                            threeNumRight = true;
+                            size=i;
+                        }
+                        else return false;
+                    }
+                    else if(cardSize[i]==2)twoNumRight++;
+                }
+                if(twoNumRight==3&&threeNumRight&&size>lastSize){
+                    updateDate(12,size,15);
+                    return true;
+                }
+                return false;
             }
             //三三三
             case 13:{
@@ -189,56 +280,70 @@ public class Deck {
             }
             //三三三三带一一一一
             case 14:{
-
-
+                int oneNumRight=0,size=-1;
+                boolean threeNumRight=false;
+                for(int i=0;i<15;i++){
+                    if(cardSize[i]==3){
+                        if(i>8)return false;
+                        if(cardSize[i+1]==3&&cardSize[i+2]==3&&cardSize[i+3]==3){
+                            size=i;
+                            threeNumRight=true;
+                        }
+                        else return false;
+                    }
+                    else if(cardSize[i]==1)oneNumRight++;
+                    else if(cardSize[i]==2)oneNumRight+=2;
+                }
+                if(oneNumRight==4&&threeNumRight&&size>lastSize){
+                    updateDate(14,size,16);
+                }
             }
-            case 15:{
-
+            //三三三三
+            case 15: {
+                for (int i = 0; i < 15; i++) {
+                    if (cardSize[i] == 3) {
+                        if (i > 8) return false;
+                        if (cardSize[i + 1] == 3 && cardSize[i + 2] == 3 && cardSize[i + 3] == 3 && i > lastSize) {
+                            updateDate(15, i, 12);
+                        }
+                        else return false;
+                    }
+                }
             }
+            //四带一
             case 16:{
-
+                for(int i=0;i<15;i++){
+                    if(cardSize[i]==4){
+                        updateDate(16,i,5);
+                        return true;
+                    }
+                }
+                return false;
             }
+            //四带二
             case 17:{
-
-            }
-            case 18:{
-
+                boolean twoNumRight=false,fourNumRight=false;
+                int size=-1;
+                for(int i=0;i<15;i++){
+                    if(cardSize[i]==4){
+                        size=i;
+                        fourNumRight=true;
+                    }
+                    else if(cardSize[i]==2)
+                        twoNumRight=true;
+                }
+                if(twoNumRight&&fourNumRight&&size>lastSize){
+                    updateDate(17,size,6);
+                    return true;
+                }
+                return false;
             }
         }
         return false;
     }
 
-    //添加新卡牌
-    public void add(Card card){
-      deck.add(card);
-    }
-
-    //删除卡牌
-    public void delete(Card card){
-        deck.remove(card);
-    }
-
-    //出牌后返回卡组类型
-    public int getDeckType(){
-        return deckType;
-    }
-
-    //出牌后返回卡组大小
-    public int getSize(){
-        return size;
-    }
-
-    //出牌后返回卡组卡牌数目
-    public int getNumber(){
-        return number;
-    }
-    //首发选中牌面合理性检验
-    private boolean reasonablenessTest(){
-        return false;
-    }
-
     //显示出牌元素
-    private  TreeSet<Card>deck;
+    private final TreeSet<Card>deck;
     //传入的上一次出牌的数据
     private final int lastType;
     private final int lastSize;
