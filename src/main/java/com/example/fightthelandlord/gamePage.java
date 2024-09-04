@@ -45,7 +45,7 @@ public class gamePage {
 
         //剩余三个地主牌
         List<Card> subList = deck.subList(51, 54); // 获取子列表
-        ArrayList<Card> bottomCards = new ArrayList<>(subList);
+        bottomCards = new ArrayList<>(subList);
 
         //洗牌
         cardSorted(cards1);
@@ -69,6 +69,7 @@ public class gamePage {
         players[0]=new Player(cards1);
         players[1]=new Player(cards2);
         players[2]=new Player(cards3);
+
     }
     //在分排结束后对卡组进行排序
     void cardSorted(ArrayList<Card> deck){
@@ -133,5 +134,6 @@ public class gamePage {
     }
 
     private Player[]players;
+    private ArrayList<Card> bottomCards;
 
 }
