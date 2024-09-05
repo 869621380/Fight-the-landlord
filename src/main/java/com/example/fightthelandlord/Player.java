@@ -1,7 +1,5 @@
 package com.example.fightthelandlord;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 
 public class Player {
     public Player(){
@@ -21,21 +19,9 @@ public class Player {
 
     //接收卡牌
     void receiveCard(ArrayList<Card>deck){
-        for (Card card : deck) {
-            this.deck.add(card);
-        }
+        this.deck.addAll(deck);
     }
 
-    int showScore(){
-        int score=getScore();
-        //界面操作
-        return score;
-    }
-
-    //
-    int getScore(){
-        return 0;
-    }
 
     //设置身份农民 or 地主
     void setIdentity(int theIdentity){

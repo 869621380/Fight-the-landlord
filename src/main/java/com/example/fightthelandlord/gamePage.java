@@ -23,31 +23,41 @@ public class gamePage {
         } catch (IOException e) {
             System.out.println("断开连接");//前端可以忽视
         }
-        this.isInGame = false;
+
     }
+
     //开始游戏
     public void gameStart() throws IOException {
         String startMsg=in.readUTF();
-        System.out.println("游戏开始");
-        dealCard();
+        System.out.println(startMsg);
+        do{
+            dealCard();
+        }
+        while (!snatchLandlord());
+        if(whoIsLord==1){
+            player1.receiveCard(receiveServeCard());
+        }
+        else if(whoIsLord==2)numOfPlayer3+=3;
+        else numOfPlayer3+=3;
+        playGame();
     }
+
     //开局发牌
     public void dealCard() throws IOException {
-
         numOfPlayer3=numOfPlayer2=17;
         player1.receiveCard(receiveServeCard());
-
     }
 
-    //开始游戏
-
     //抢地主
-    public void snatchLandlord(){
+    public boolean snatchLandlord(){
 
+        return false;
     }
 
     //出牌阶段
+    void playGame(){
 
+    }
 
     //报单报双
     public int onlyOneOrTwo(Player player){
@@ -70,11 +80,11 @@ public class gamePage {
 
     private Player player1;
     private ArrayList<Card> bottomCards;
-    private boolean isInGame;
-    private Socket socket;
+    private final Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
-    int numOfPlayer2;
-    int numOfPlayer3;
+    private int numOfPlayer2;
+    private int numOfPlayer3;
+    private int whoIsLord;
 
 }

@@ -22,6 +22,8 @@ public class Card implements Comparable<Card>{
     public String getCardInfo() {
         return cardElement.getKey().toString() + " " + cardElement.getValue().toString();
     }
+
+    //实现可比较功能
     @Override
     public int compareTo(Card other) {
         // 首先比较大小
