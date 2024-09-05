@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import org.example.fight_the_landlord.Card;
+import org.example.fight_the_landlord.Deck;
 import org.example.fight_the_landlord.Player;
 import org.example.fight_the_landlord.gameWindow;
 
@@ -22,6 +23,7 @@ public class gameWindowController {
 
     private Player player;
     private ArrayList<Card> cards;
+    private Deck deck;
 
 
     //创建三个卡组
@@ -59,6 +61,7 @@ public class gameWindowController {
 
     @FXML
     private void initialize() {
+        deck = new Deck();
         // 设置背景图片
         BackgroundImage backgroundImage = new BackgroundImage(
                 new Image(getClass().getResourceAsStream("/images/gameBackground.jpg")),
@@ -85,11 +88,13 @@ public class gameWindowController {
 
 
         // 调试其他玩家出牌
-
+//        paint12PlayCard(playedCards2);
+//        paint12PlayCard(playedCards1);
 
         // 按钮事件处理
         passButton.setOnAction(event -> System.out.println("不出"));
         playButton.setOnAction(event -> playCard());
+        playButton.setDisable(true);
     }
 
     public void setGameWindow(gameWindow gameWindow) {
@@ -116,12 +121,16 @@ public class gameWindowController {
             // 牌上移
             AnchorPane.setTopAnchor(clickedImageView, 0.0);
             // 加入到将打出的牌
-            cards2.add(cards1.get(i));
+            deck.add(cards1.get(i));
+            // 是否能出牌检测
+            playButton.setDisable(!deck.check());
         } else {
             // 牌下移
             AnchorPane.setTopAnchor(clickedImageView, 30.0);
             // 从将打出的牌删去
-            cards2.remove(cards1.get(i));
+            deck.delete(cards1.get(i));
+            // 是否能出牌检测
+            playButton.setDisable(!deck.check());
         }
     }
 
@@ -190,23 +199,24 @@ public class gameWindowController {
         cards2.clear();
     }
 
-    void paint12PlayCard(){
-        playedCards1.getChildren().clear();
-        playedCards2.getChildren().clear();
-        int num = cards2.size();
-        int M = 5;
-        if(num < M){
-            playedCards.setPrefHeight(0.0+);
-        }
-        playedCards.setPrefHeight(0.0+);
-        playedCards.setPrefWidth(36 * (num+1));
+    void paint12PlayCard(AnchorPane anchorPane){
+        anchorPane.getChildren().clear();
+        int num = 10;
+        anchorPane.setPrefWidth(72.0);
+        anchorPane.setPrefHeight(68.0+34.0*num);
         ImageView[] imageView = new ImageView[num];
         for(int i = 0; i < num; i++){
-            int v = cards2.get(i).getSize();
+            int v = cards3.get(i).getSize();
             imageView[i] = new ImageView();
             imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/" + (v+3) + ".jpg")));
         }
-
+        for(int i = 0; i < num; i++){
+            //  设置锚点
+            AnchorPane.setLeftAnchor(imageView[i],0.0);
+            AnchorPane.setTopAnchor(imageView[i],0.0+(34.0*i));
+            // 加入到打出的牌容器
+            anchorPane.getChildren().addAll(imageView[i]);
+        }
     }
 
     //***************************************************

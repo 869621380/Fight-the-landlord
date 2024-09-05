@@ -21,7 +21,7 @@
                <ImageView fx:id="bottomCard3" fitHeight="102.0" fitWidth="72.0" />
            </children>
        </HBox>
-       <ImageView fx:id="userImage" fitHeight="100" fitWidth="100" layoutX="39.0" layoutY="543.0" />
+       <ImageView fx:id="userImage" fitHeight="100" fitWidth="100" layoutX="64.0" layoutY="650.0" />
        <HBox alignment="BASELINE_CENTER" layoutX="399.0" layoutY="593.0" prefHeight="30.0" prefWidth="402.0" spacing="200.0" AnchorPane.bottomAnchor="177.0" AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="399.0" AnchorPane.topAnchor="593.0">
            <children>
                <Button fx:id="passButton" prefWidth="150.0" text="不出" HBox.hgrow="ALWAYS" />
@@ -31,8 +31,8 @@
        <ImageView fx:id="player2Image" fitHeight="100" fitWidth="100" layoutX="14.0" layoutY="50.0" />
        <ImageView fx:id="player1Image" fitHeight="100" fitWidth="100" layoutX="1086.0" layoutY="50.0" />
        <AnchorPane fx:id="handCards" layoutY="650.0" />
-       <AnchorPane fx:id="playedCards1" layoutX="100.0" layoutY="150.0" />
-       <AnchorPane fx:id="playedCards2" layoutX="1000.0" layoutY="150.0" />
+       <AnchorPane fx:id="playedCards1" layoutX="150.0" layoutY="80.0" />
+       <AnchorPane fx:id="playedCards2" layoutX="1000.0" layoutY="80.0" />
        <AnchorPane fx:id="playedCards" layoutY="450.0" />
    </children>
 
