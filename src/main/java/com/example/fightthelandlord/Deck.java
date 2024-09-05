@@ -43,6 +43,8 @@ public class Deck {
     
     //检验选中卡牌能否出牌
     public boolean check(){
+        System.out.println(toString());
+        //if(deck.size()==0)return false;
         //如果自己是首出牌进行首牌合理性检验
         if(lastType==0&& !deck.isEmpty())
             return reasonablenessTest();
@@ -104,13 +106,31 @@ public class Deck {
 
     //获取出牌文字信息
     public String toString(){
-        return "玩家出牌"+deck.toString();
+        String s="当前牌面";
+        for(Card card:deck){
+            int size=card.getSize();
+            String alpha;
+            if(size<7)alpha= String.valueOf((char) ('3' +size));
+            else{
+                if(size==7)alpha="10";
+                else if(size==8)alpha="J";
+                else if(size==9)alpha="Q";
+                else if(size==10)alpha="K";
+                else if (size==11)alpha="A";
+                else if(size==12)alpha="2";
+                else if(size==13)alpha="Small Joker";
+                else alpha="Big Joker";
+            }
+            s+="["+alpha+","+card.getSuit()+"] ";
+        }
+        return s;
     }
 
     //首发选中牌面合理性检验
     private boolean reasonablenessTest(){
         for(int i=1;i<=19;i++){
-            if(typeCheck(i))return true;
+            boolean check=typeCheck(i);
+            if(check)return true;
         }
         return false;
     }
@@ -121,11 +141,12 @@ public class Deck {
         for(Card card:deck){
             cardSize[card.getSize()]++;
         }
+
         switch (type){
             //单张
             case 1:{
-                if(deck.size()!=1)return true;
-                if(size>lastSize){
+                if(deck.size()!=1)return false;
+                if(deck.first().getSize()>lastSize){
                     updateDate(1,deck.first().getSize(),1);
                     return true;
                 }
@@ -160,6 +181,7 @@ public class Deck {
                     if(cardSize[i]==3){
                         if(i>lastSize){
                             updateDate(4,i,4);
+                            return  true;
                         }
                         else return false;
                     }
@@ -184,9 +206,10 @@ public class Deck {
             }
             //顺子5~11
             case 6:{
+                if(deck.size()<5||deck.size()>11)return false;
                 //不是首发
                 if(lastNumber!=-1&&deck.size()!=lastNumber)return false;
-                
+                if(deck.last().getSize()>=12)return false;
                 int firstSize=deck.first().getSize();
                 int number=deck.size();
                 for(int i=firstSize;i<number+firstSize;++i){
@@ -269,6 +292,7 @@ public class Deck {
                 }
                 if(twoNumRight==2&&threeNumRight){
                     updateDate(10,size,8);
+                    return true;
                 }
             }
             //三三三带一一一
@@ -338,6 +362,7 @@ public class Deck {
                 }
                 if(oneNumRight==4&&threeNumRight&&size>lastSize){
                     updateDate(14,size,16);
+                    return true;
                 }
             }
             //三三三三
@@ -348,6 +373,7 @@ public class Deck {
                         if (i > 8) return false;
                         if (cardSize[i + 1] == 3 && cardSize[i + 2] == 3 && cardSize[i + 3] == 3 && i > lastSize) {
                             updateDate(15, i, 12);
+                            return true;
                         }
                         else return false;
                     }
@@ -388,8 +414,10 @@ public class Deck {
                 if(deck.size()!=4)return false;
                 int firstSize=deck.first().getSize();
                 if(firstSize==deck.last().getSize()){
-                    if(firstSize>lastSize)
-                        updateDate(18,firstSize,4);
+                    if(firstSize>lastSize) {
+                        updateDate(18, firstSize, 4);
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -403,6 +431,7 @@ public class Deck {
                 return false;
             }
         }
+
         return false;
     }
 

@@ -3,15 +3,15 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 public class server {
-    //public static server_room[] rooms = new server_room[5];//创建房间
+    public static server_room[] rooms = new server_room[5];//创建房间
     public static server_room room = new server_room();
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(8888);//服务窗口
         Socket client;
         //开多房间时再用
-//        for (int i = 0; i < 5; i++) {
-//            rooms[i] = new server_room();
-//        }
+        for (int i = 0; i < 5; i++) {
+            rooms[i] = new server_room();
+        }
         while (true) {
             System.out.println("Waiting for connection...");
             client = serverSocket.accept();//等待玩家
@@ -49,6 +49,7 @@ class playerMsg extends Thread {
     public void run() {
         try {
             //选择房间，未完成
+            this.room = rooms[0];//==========测试，记得调整
             //
             if (server_room.n == 0){//一人的线程启动游戏线程
                 server_room.n = 3;

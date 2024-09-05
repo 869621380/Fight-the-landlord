@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="1900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.fight_the_landlord.Controllers.gameWindowController">
+<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="1900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fightthelandlord.Controllers.gameWindowController">
    <children>
        <!-- 底牌区域 -->
        <HBox alignment="CENTER" layoutX="482.0" layoutY="14.0" prefHeight="100.0" prefWidth="223.0" spacing="10">

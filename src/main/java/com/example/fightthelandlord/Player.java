@@ -22,7 +22,6 @@ public class Player {
         this.deck.addAll(deck);
     }
 
-
     //设置身份农民 or 地主
     void setIdentity(int theIdentity){
         identity=theIdentity;
@@ -37,5 +36,6 @@ public class Player {
     private int identity;
     //玩家手中卡组//个人认为访问量更多采用ArrayList
     private ArrayList<Card> deck;
+
 
 }

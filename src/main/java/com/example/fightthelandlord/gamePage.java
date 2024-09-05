@@ -9,7 +9,7 @@ import java.util.*;
 
 public class gamePage {
     //斗地主游戏界面
-    gamePage(){
+    public gamePage(){
         player1=new Player();
         socket=new Socket();
         try {
@@ -24,10 +24,11 @@ public class gamePage {
             System.out.println("断开连接");//前端可以忽视
         }
 
+
     }
 
     //开始游戏
-    public void gameStart() throws IOException {
+    public void gameStart() throws IOException, InterruptedException {
         String startMsg=in.readUTF();
         System.out.println(startMsg);
         do{
@@ -49,9 +50,52 @@ public class gamePage {
     }
 
     //抢地主
-    public boolean snatchLandlord(){
+    public boolean snatchLandlord() throws IOException, InterruptedException{
+        System.out.println("抢地主");
+        //调用前端函数切换页面（未实现）
+        int noBark_num = 0;//初始化不叫的人数，如果3个人不叫就重发牌
+        for (int i = 0; i < 3; i++) {
+            //调用前端定位窗口位置（未实现）
+            serverMessage = receiveMsg();
+            if (serverMessage.equals("抢地主")){
+                //到本玩家抢地主的逻辑
+                serverMessage = in.readUTF();
+                String s = "";
+                //-----------------这里要通过点击前端的按钮返回点数：String s = 函数值（未实现）
+                if(s.equals("0")){
+                    noBark_num++;
+                }
+                out.writeUTF(s);
+                System.out.println("你抢了"+s+"分");
+            }
+            else {
+                //不到本玩家抢地主的逻辑
 
-        return false;
+                //调用前端显示其他玩家的点数（未实现）
+                if(serverMessage.charAt(1) == '0'){
+                    noBark_num++;
+                }
+            }
+        }
+        if(noBark_num == 3){
+            //调用前端抢地主页面关闭，重新发牌（未实现）
+            return false;
+        }
+//        serverMessage = receiveMsg();
+//        whoIsLord = serverMessage;//本机接受谁是地主
+//        if(serverMessage.equals("you")){//你是地主的逻辑
+//            System.out.println("你是地主");//在前端显示自己是地主
+//            isLord = true;
+//        }
+        serverMessage=receiveMsg();
+        return true;
+    }
+
+    //接受服务器信息
+    public String receiveMsg() throws IOException{
+        out.writeUTF("receive message successfully");
+        System.out.println("receive message successfully");
+        return in.readUTF();
     }
 
     //出牌阶段
@@ -86,5 +130,6 @@ public class gamePage {
     private int numOfPlayer2;
     private int numOfPlayer3;
     private int whoIsLord;
+    private String serverMessage;
 
 }

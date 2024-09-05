@@ -8,7 +8,7 @@ import java.util.List;
 public class server_gameRound {
     private ArrayList<server_player> players;//三个玩家
     private ArrayList<Card> remain;
-    private ArrayList<String> n = new ArrayList<>();//抢地主的点数
+    private ArrayList<String> n;//抢地主的点数
     private int whoIsLord;//地主玩家序号
     private ArrayList<Card> allCards;
 
@@ -19,6 +19,7 @@ public class server_gameRound {
      */
     public server_gameRound(ArrayList<server_player> players) {
         this.players = players;
+        n = new ArrayList<>();
         //==================================
     }
 
@@ -173,13 +174,15 @@ public class server_gameRound {
         for (int i = 0; i < 3; i++) {
             sendToOne(i, "抢地主");
             String s = sendToOne(i, tostring(n));
+            // if(s.equals("3"))break;
             players.get(i).setScore(Integer.parseInt(s));
             if (s.equals("0")) {
                 noBark++;
             }else {
                 n.remove(s);
             }
-            sendToAnotherTwo(i, s);//给其他玩家发送此玩家抢的点数
+            sendToOne((i+1)%3, 'l'+s);//给右手玩家发送此玩家抢的点数
+            sendToOne((i+2)%3, 'r'+s);//给左手玩家发送此玩家抢的点数
         }
         if (noBark == 3){
             System.out.println("重新洗牌");
@@ -191,16 +194,26 @@ public class server_gameRound {
                 whoIsLord = i;//i是地主
             }
         }
+//        for (int i = 0; i < 3; i++) {
+//            if (i == whoIsLord) {
+//                sendToOne(i, "you");
+//                sendCardToOne(i, remain);
+//            } else {
+//                //===================================信号未确定
+//                sendToOne(i, "" + whoIsLord );//给其他玩家说地主是谁和地主牌
+//                sendCardToOne(i, remain);
+//            }
+//        }
+
+        //发送底牌
         for (int i = 0; i < 3; i++) {
-            if (i == whoIsLord) {
-                sendToOne(i, "you");
-                sendCardToOne(i, remain);
-            } else {
-                //===================================信号未确定
-                sendToOne(i, "" + whoIsLord );//给其他玩家说地主是谁和地主牌
-                sendCardToOne(i, remain);
-            }
+            sendCardToOne(i, remain);
         }
+        sendToOne(whoIsLord,"you");
+        //上一玩家是2，下一玩家是1
+        sendToOne((whoIsLord+1)%3,"2");//上一玩家(手）
+        sendToOne((whoIsLord+2)%3,"1");//下一玩家(右手)
+
         return true;
     }
 
@@ -216,6 +229,9 @@ public class server_gameRound {
         n = i;
         whoIsLord = 0;
     }
+   // public void finishLord(){
+
+    //}
     //给所有人发消息
     /**
      * &#064;title:  sendToAll
@@ -265,7 +281,6 @@ public class server_gameRound {
         return players.get(i).receiveMsg();
     }
     public String tostring(ArrayList<String> arrayList){
-        int n = arrayList.size();
         StringBuilder str = new StringBuilder();
         for (String s : arrayList) {
             str.append(s);
@@ -277,26 +292,28 @@ public class server_gameRound {
      * 传输牌
      */
     public void sendCardToOne(int i, ArrayList<Card> cards) {
-        players.get(i).sendMsg(String.valueOf(cards.size()));
-        for (Card c : cards) {
-            players.get(i).sendMsg(Integer.toString(c.getSize()));
-            players.get(i).sendMsg(Integer.toString(c.getSuit()));
+        StringBuilder card_str = new StringBuilder();
+//        for (String s : playerDeck){
+//            str.append(s);
+//        }
+//        return str.toString();
+        for (Card card : cards) {
+            card_str.append(card.getCardInfo());
         }
+        players.get(i).sendMsg(card_str.toString());
     }
 
     /**
      * 接受牌
      */
     public ArrayList<Card> receiveCard(int i) {
-        ArrayList<Card> cards = new ArrayList<>();
-        int tem = Integer.parseInt(players.get(i).receiveMsg());
-        for (int j = 0; j < tem; j++) {
-            int value = Integer.parseInt(players.get(i).receiveMsg());
-            int key = Integer.parseInt(players.get(i).receiveMsg());
-            Card temp = new Card(value, key);
-            cards.add(temp);
+        ArrayList<Card>deck=new ArrayList<>();
+        String[] result = players.get(i).receiveMsg().split(" ");
+        for(int k=0;k<result.length;k+=2){
+            Card newCard=new Card(Integer.parseInt(result[i]),Integer.parseInt(result[i+1]));
+            deck.add(newCard);
         }
-        return cards;
+        return deck;
     }
 
     /**
@@ -310,13 +327,16 @@ public class server_gameRound {
      */
 //给除了i的其他两人发送卡牌
     public void sendCardToAnotherTwo(int i, ArrayList<Card> cards) {
+        // 构建卡片信息的字符串
+        StringBuilder card_str = new StringBuilder();
+        for (Card card : cards) {
+            card_str.append(card.getCardInfo());
+        }
+
+        // 遍历所有玩家并发送消息，但排除当前玩家
         for (int j = 0; j < 3; j++) {
             if (j != i) {
-                players.get(i).sendMsg(String.valueOf(cards.size()));
-                for (Card c : cards) {
-                    players.get(i).sendMsg(Integer.toString(c.getSize()));
-                    players.get(i).sendMsg(Integer.toString(c.getSuit()));
-                }
+                players.get(i).sendMsg(card_str.toString());
             }
         }
     }
