@@ -14,10 +14,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
 
-import static javafx.application.Application.launch;
-
 public class gamePage extends Application {
-
     //斗地主游戏界面
     public gamePage() throws IOException {
         player1=new Player();
@@ -37,43 +34,13 @@ public class gamePage extends Application {
         }
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        /**
-         * scene对象可获取，controller用于和前端界面交换数据
-         */
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameWindow.fxml"));
-        //   加载 FXML 文件并返回根节点（Parent）。
-        Parent root = fxmlLoader.load();
-        //   通过 fxmlLoader.getController() 获取 GameWindowController 的实例。
-        controller = fxmlLoader.getController();
-        Scene scene = new Scene(root, 1200, 800);
-
-        /* ******************************************* */
-
-        /* 用于固定窗口大小，设置标题  */
-        primaryStage.setTitle("gameWindow");
-        primaryStage.setScene(scene);
-        primaryStage.setMinWidth(scene.getWidth());
-        primaryStage.setMaxWidth(scene.getWidth());
-        primaryStage.setMinHeight(scene.getHeight());
-        primaryStage.setMaxHeight(scene.getHeight());
-
-        primaryStage.show();//  窗口输出
-
-
-    }
-
     //开始游戏
     public void gameStart() throws IOException, InterruptedException {
         System.out.println("waiting to start.....");
-        String startMsg=in.readUTF();
-        System.out.println(startMsg);
-        do{
-            dealCard();
-        }
-        while (!snatchLandlord());
-        receiveButtonCard();
+       // String startMsg=in.readUTF();
+        //System.out.println(startMsg);
+            //dealCard();
+            testDealCard();
     }
 
     //开局发牌
@@ -81,7 +48,6 @@ public class gamePage extends Application {
         numOfPlayer3=numOfPlayer2=17;
         ArrayList<Card>deck=new ArrayList<>(receiveServeCard());
         player1.receiveCard(deck);
-        controller.setHandCard(deck);
     }
 
     //抢地主
@@ -249,6 +215,9 @@ public class gamePage extends Application {
         out.writeUTF(card_str.toString());
         System.out.println("你出了："+card_str.toString());
     }
+    public ArrayList<Card>getDeck(){
+        return player1.getDeck();
+    }
     private Player player1;
     private ArrayList<Card> bottomCards;
     private final Socket socket;
@@ -258,6 +227,94 @@ public class gamePage extends Application {
     private int numOfPlayer3;
     private int whoIsLord;
     private String serverMessage;
-    private gameWindowController controller;
     private boolean connectRight;
+    private gameWindowController controller;
+    void testDealCard(){
+        ArrayList<Card> deck = new ArrayList<>();
+        //创建一副牌,0表示3，13~小王，14~大王
+        int[] sizes = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+        //牌的花色
+        int[] suits = {0, 1, 2, 3};
+
+        for (int size : sizes) {
+            for (int suit : suits) {
+                deck.add(new Card(size, suit));
+            }
+        }
+        //添加大小王
+        deck.add(new Card(13, 0));
+        deck.add(new Card(14, 0));
+        //洗牌
+        Collections.shuffle(deck);
+
+        //创建三个卡组
+        ArrayList<Card> cards1 = new ArrayList<>();
+        ArrayList<Card> cards2 = new ArrayList<>();
+        ArrayList<Card> cards3 = new ArrayList<>();
+        //分发手牌
+        for (int i = 0; i < 51; i += 3) {
+            cards1.add(deck.get(i));
+            cards2.add(deck.get(i + 1));
+            cards3.add(deck.get(i + 2));
+        }
+
+        //剩余三个地主牌
+        List<Card> subList = deck.subList(51, 54); // 获取子列表
+        bottomCards = new ArrayList<>(subList);
+
+        //洗牌
+        cardSorted(cards1);
+        cardSorted(cards2);
+        cardSorted(cards3);
+
+        //打印玩家手牌
+        System.out.println("player1's cards:");
+        for (Card card : cards1) {
+            System.out.println(card.getCardInfo() + " ");
+        }
+        player1.receiveCard(cards1);
+    }
+    public void start(Stage primaryStage) throws Exception {
+        /**
+         * scene对象可获取，controller用于和前端界面交换数据
+         */
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameWindow.fxml"));
+        //   加载 FXML 文件并返回根节点（Parent）。
+        Parent root = fxmlLoader.load();
+        //   通过 fxmlLoader.getController() 获取 GameWindowController 的实例。
+        controller = fxmlLoader.getController();
+        Scene scene = new Scene(root, 1200, 800);
+
+        /* ******************************************* */
+
+        /* 用于固定窗口大小，设置标题  */
+        primaryStage.setTitle("gameWindow");
+        primaryStage.setScene(scene);
+        primaryStage.setMinWidth(scene.getWidth());
+        primaryStage.setMaxWidth(scene.getWidth());
+        primaryStage.setMinHeight(scene.getHeight());
+        primaryStage.setMaxHeight(scene.getHeight());
+
+        primaryStage.show();//  窗口输出
+        //if(!game.getConnectStatus()){
+        // primaryStage.close();
+        // }
+        gameStart();
+        controller.setHandCard(player1.getDeck());
+
+
+    }
+
+    //在分排结束后对卡组进行排序
+    void cardSorted(ArrayList<Card> deck){
+        deck.sort((p1, p2) -> {
+            int sizeComparison = Integer.compare(p1.getSize(), p2.getSize());
+            if (sizeComparison != 0) {
+                return sizeComparison;
+            } else {
+                return Integer.compare(p1.getSuit(), p2.getSuit());
+            }
+        });
+    }
+
 }

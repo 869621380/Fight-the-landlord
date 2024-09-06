@@ -34,7 +34,9 @@ public class Player {
     void setIdentity(int theIdentity){
         identity=theIdentity;
     }
-
+    public ArrayList<Card>getDeck(){
+        return deck;
+    }
     //获取身份
     int getIdentity(){
         return identity;
