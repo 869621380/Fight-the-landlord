@@ -12,24 +12,37 @@ import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 
+/**
+ *             通过controller实例调用
+ * 公共属性：
+ * isPlayed  public 是否出牌
+ * Point     public 抢点数
+ * 接口：
+ * setHandCard 导入手牌
+ * setBottomCard 导入底牌
+ * setNowPoint 导入上一个人的抢点数
+ * setDeck 导入上一个人的牌型
+ * setAllButtonDisable 禁用所有按钮（不包括点击牌）
+ * getPlayedCards  获取所出的牌
+ */
+
 public class gameWindowController {
 
     //   储存参数
     private Deck deck;
     public boolean isPlayed = false;
-    private int NowPoint = 1;
+    private int NowPoint = 0;
     public int Point = -1;
-
-    ArrayList<Card> bottomCards;
 
     int temType;
     int temSize;
     int temNumber;
 
-    //创建三个卡组
+    //创建四个卡组
     ArrayList<Card> HandCards = new ArrayList<>();//  用作手牌
     ArrayList<Card> PlayedCards = new ArrayList<>();//  用作出牌
-    ArrayList<Card> OtherPlayedCards = new ArrayList<>();
+    ArrayList<Card> OtherPlayedCards = new ArrayList<>();//  用作其他玩家出牌
+    ArrayList<Card> bottomCards = new ArrayList<>();//   用作底牌
 
     public com.example.fightthelandlord.gameWindow gameWindow;
 
@@ -41,6 +54,7 @@ public class gameWindowController {
     public ImageView qiangButton2;
     public ImageView qiangButton3;
 
+    //  FXML中的各组件
     @FXML
     public AnchorPane root;
     @FXML
@@ -121,14 +135,34 @@ public class gameWindowController {
         // 打印手牌
         paintHandCard();
         Platform.runLater(() -> centerAnchorPane(handCards, root));
-
     }
 
+
+    /**
+     *       接口
+     *
+     */
+    public void setHandCard(ArrayList<Card> cards) {
+        HandCards.addAll(cards);
+    }
+    public void setBottomCard(ArrayList<Card> cards) {
+        bottomCards.addAll(cards);
+    }
+    public ArrayList<Card> getPlayedCards() {
+        return deck.getDeck();
+    }
+    public void setNowPoint(int Point){
+        this.NowPoint = Point;
+    }
     public void setAllButtonDisable(){
         for(javafx.scene.Node node : button.getChildren()){
             node.setDisable(true);
         }
     }
+    public void setDeck(Deck deck) {
+        this.deck = new Deck(deck.getDeckType(),deck.getSize(),deck.getNumber());
+    }
+
 
     private void Pass() {
 
@@ -137,27 +171,10 @@ public class gameWindowController {
     private void Qiang(int i) {
         // 更改抢点数
         Point = i;
-
         // 更改按钮
         button.getChildren().clear();
         button.getChildren().addAll(passButton,playButton);
     }
-
-    //            接口
-    public void setHandCard(ArrayList<Card> cards) {
-        HandCards.addAll(cards);
-    }
-    public void setBottomCard(ArrayList<Card> cards) {
-        bottomCards.addAll(cards);
-    }
-    public ArrayList<Card> getButtonCard() {
-        return deck.getDeck();
-    }
-    public void setPoint(int Point){
-        this.Point = Point;
-    }
-
-
 
     void refresh(){
 
