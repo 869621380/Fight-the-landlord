@@ -22,11 +22,9 @@
            </children>
        </HBox>
        <ImageView fx:id="userImage" fitHeight="100" fitWidth="100" layoutX="64.0" layoutY="650.0" />
-       <HBox alignment="BASELINE_CENTER" layoutX="399.0" layoutY="593.0" prefHeight="30.0" prefWidth="402.0" spacing="200.0" AnchorPane.bottomAnchor="177.0" AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="399.0" AnchorPane.topAnchor="593.0">
-           <children>
-               <Button fx:id="passButton" prefWidth="150.0" text="不出" HBox.hgrow="ALWAYS" />
-               <Button fx:id="playButton" prefWidth="150.0" text="出牌" HBox.hgrow="NEVER" />
-           </children>
+       <HBox fx:id="button" alignment="BASELINE_CENTER" layoutX="399.0" layoutY="540.0" prefHeight="30.0" prefWidth="402.0" spacing="200.0" AnchorPane.bottomAnchor="230.0" AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="399.0" AnchorPane.topAnchor="540.0">
+         <children>
+         </children>
        </HBox>
        <ImageView fx:id="player2Image" fitHeight="100" fitWidth="100" layoutX="14.0" layoutY="50.0" />
        <ImageView fx:id="player1Image" fitHeight="100" fitWidth="100" layoutX="1086.0" layoutY="50.0" />
