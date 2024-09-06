@@ -20,6 +20,14 @@ public class Player {
     //接收卡牌
     void receiveCard(ArrayList<Card>deck){
         this.deck.addAll(deck);
+        deck.sort((p1, p2) -> {
+            int sizeComparison = Integer.compare(p1.getSize(), p2.getSize());
+            if (sizeComparison != 0) {
+                return sizeComparison;
+            } else {
+                return Integer.compare(p1.getSuit(), p2.getSuit());
+            }
+        });
     }
 
     //设置身份农民 or 地主
@@ -31,11 +39,15 @@ public class Player {
     int getIdentity(){
         return identity;
     }
-
+    public void setState(String state){
+        this.state=state;
+    }
     //玩家类型 1：地主 2：农民 0:未定义
     private int identity;
     //玩家手中卡组//个人认为访问量更多采用ArrayList
     private ArrayList<Card> deck;
+
+    private String state;
 
 
 }

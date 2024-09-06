@@ -2,7 +2,6 @@ package com.example.fightthelandlord.Controllers;
 
 import com.example.fightthelandlord.Card;
 import com.example.fightthelandlord.Deck;
-import com.example.fightthelandlord.gameWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -44,7 +43,7 @@ public class gameWindowController {
     ArrayList<Card> OtherPlayedCards = new ArrayList<>();//  用作其他玩家出牌
     ArrayList<Card> bottomCards = new ArrayList<>();//   用作底牌
 
-    public com.example.fightthelandlord.gameWindow gameWindow;
+    //public com.example.fightthelandlord.gameWindow gameWindow;
 
     //  各按钮
     public ImageView passButton;
@@ -145,9 +144,23 @@ public class gameWindowController {
     public void setHandCard(ArrayList<Card> cards) {
         HandCards.addAll(cards);
     }
+    //添加底牌
+    public void insertBottomCard(){
+        HandCards.addAll(bottomCards);
+        HandCards.sort((p1, p2) -> {
+            int sizeComparison = Integer.compare(p1.getSize(), p2.getSize());
+            if (sizeComparison != 0) {
+                return sizeComparison;
+            } else {
+                return Integer.compare(p1.getSuit(), p2.getSuit());
+            }
+        });
+    }
+    //设置底牌
     public void setBottomCard(ArrayList<Card> cards) {
         bottomCards.addAll(cards);
     }
+
     public ArrayList<Card> getPlayedCards() {
         return deck.getDeck();
     }
@@ -159,6 +172,7 @@ public class gameWindowController {
             node.setDisable(true);
         }
     }
+
     public void setDeck(Deck deck) {
         this.deck = new Deck(deck.getDeckType(),deck.getSize(),deck.getNumber());
     }
@@ -180,9 +194,9 @@ public class gameWindowController {
 
     }
 
-    public void setGameWindow(gameWindow gameWindow) {
-        this.gameWindow = gameWindow;
-    }
+    //public void setGameWindow(gameWindow gameWindow) {
+       // this.gameWindow = gameWindow;
+   // }
 
     /**
      * &#064;description  用于水平居中手牌和自己打出的牌

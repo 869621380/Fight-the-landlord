@@ -9,7 +9,7 @@ public class server_player {
     private DataInputStream in;//玩家输入流
     private DataOutputStream out;//玩家输出流
     private int score;//玩家抢地主的点数
-    private boolean inInGame;//玩家是否在游戏
+    private boolean isInGame;//玩家是否在游戏
     private server_room room;//玩家在的房间
 
     public server_player(Socket socket) {
@@ -20,7 +20,7 @@ public class server_player {
             e.printStackTrace();
         }
         //-------------------------------------------应该是false，测试用true
-        this.inInGame = true;
+        this.isInGame = true;
     }
 
     public server_room getRoom() {
@@ -29,9 +29,9 @@ public class server_player {
 
     public void setRoom(server_room room) {this.room = room;}
 
-    public boolean inInGame() {return inInGame;}
+    public boolean isInGame() {return isInGame;}
 
-    public void setInGame(boolean inInGame) {this.inInGame = inInGame;}
+    public void setInGame(boolean isInGame) {this.isInGame = isInGame;}
 
     /**
 
