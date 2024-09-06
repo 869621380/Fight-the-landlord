@@ -2,6 +2,7 @@ package com.example.fightthelandlord.Controllers;
 
 import com.example.fightthelandlord.Card;
 import com.example.fightthelandlord.Deck;
+import com.example.fightthelandlord.gameWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -19,10 +20,14 @@ import java.util.ArrayList;
  * 接口：
  * setHandCard 导入手牌
  * setBottomCard 导入底牌
- * setNowPoint 导入上一个人的抢点数
+ * setOtherPoint 导入其他玩家的抢点数
  * setDeck 导入上一个人的牌型
+ * setOtherPlayedCard(char,ArrayList<Card>) 导入其他玩家出的牌(导入后自动Paint）
+ * setFirstPlay 导入左右哪位其他玩家先出牌（左l 右r）
  * setAllButtonDisable 禁用所有按钮（不包括点击牌）
+ * turnButton 更改按钮为出牌和不出
  * getPlayedCards  获取所出的牌
+ * getBottomCard 获得底牌加入手牌（获取后自动Paint增加后手牌）
  */
 
 public class gameWindowController {
@@ -32,6 +37,7 @@ public class gameWindowController {
     public boolean isPlayed = false;
     private int NowPoint = 0;
     public int Point = -1;
+    AnchorPane OnPlayer = new AnchorPane();
 
     int temType;
     int temSize;
@@ -41,9 +47,9 @@ public class gameWindowController {
     ArrayList<Card> HandCards = new ArrayList<>();//  用作手牌
     ArrayList<Card> PlayedCards = new ArrayList<>();//  用作出牌
     ArrayList<Card> OtherPlayedCards = new ArrayList<>();//  用作其他玩家出牌
-    ArrayList<Card> bottomCards = new ArrayList<>();//   用作底牌
+    ArrayList<Card> BottomCards = new ArrayList<>();//   用作底牌
 
-    //public com.example.fightthelandlord.gameWindow gameWindow;
+    public com.example.fightthelandlord.gameWindow gameWindow;
 
     //  各按钮
     public ImageView passButton;
@@ -85,7 +91,7 @@ public class gameWindowController {
         deck = new Deck(0,-1,-1);
         // 设置背景图片
         BackgroundImage backgroundImage = new BackgroundImage(
-                new Image(getClass().getResourceAsStream("/images/gameBackground.jpg")),
+                new Image(getClass().getResourceAsStream("/images/gameBackground2.png")),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.DEFAULT,
@@ -131,9 +137,6 @@ public class gameWindowController {
         }
         button.getChildren().addAll(qiangButton0,qiangButton1,qiangButton2,qiangButton3);
 
-        // 打印手牌
-        paintHandCard();
-        Platform.runLater(() -> centerAnchorPane(handCards, root));
     }
 
 
@@ -143,24 +146,15 @@ public class gameWindowController {
      */
     public void setHandCard(ArrayList<Card> cards) {
         HandCards.addAll(cards);
+        // 打印手牌
+        paintHandCard();
+        Platform.runLater(() -> centerAnchorPane(handCards, root));
     }
-    //添加底牌
-    public void insertBottomCard(){
-        HandCards.addAll(bottomCards);
-        HandCards.sort((p1, p2) -> {
-            int sizeComparison = Integer.compare(p1.getSize(), p2.getSize());
-            if (sizeComparison != 0) {
-                return sizeComparison;
-            } else {
-                return Integer.compare(p1.getSuit(), p2.getSuit());
-            }
-        });
-    }
-    //设置底牌
     public void setBottomCard(ArrayList<Card> cards) {
-        bottomCards.addAll(cards);
+        BottomCards.addAll(cards);
+        // 打印底牌
+        paintBottomCard();
     }
-
     public ArrayList<Card> getPlayedCards() {
         return deck.getDeck();
     }
@@ -172,9 +166,35 @@ public class gameWindowController {
             node.setDisable(true);
         }
     }
-
     public void setDeck(Deck deck) {
         this.deck = new Deck(deck.getDeckType(),deck.getSize(),deck.getNumber());
+    }
+    public void getBottomCard() {
+        HandCards.addAll(BottomCards);
+        // 打印手牌
+        paintHandCard();
+        Platform.runLater(() -> centerAnchorPane(handCards, root));
+    }
+    public void setOtherPlayedCard(char who,ArrayList<Card> otherPlayedCards){
+        OtherPlayedCards.addAll(otherPlayedCards);
+        if(who == 'l'){
+            OnPlayer = playedCards2;
+        } else if (who == 'r') {
+            OnPlayer = playedCards1;
+        }
+        paint12PlayCard();
+    }
+    public void setFirstPlay(int num){
+        if(num == 1){
+            OnPlayer = playedCards1;
+        }else{
+            OnPlayer = playedCards2;
+        }
+    }
+    public void turnButton() {
+        // 更改按钮
+        button.getChildren().clear();
+        button.getChildren().addAll(passButton,playButton);
     }
 
 
@@ -185,18 +205,15 @@ public class gameWindowController {
     private void Qiang(int i) {
         // 更改抢点数
         Point = i;
-        // 更改按钮
-        button.getChildren().clear();
-        button.getChildren().addAll(passButton,playButton);
     }
 
     void refresh(){
 
     }
 
-    //public void setGameWindow(gameWindow gameWindow) {
-       // this.gameWindow = gameWindow;
-   // }
+    public void setGameWindow(gameWindow gameWindow) {
+        this.gameWindow = gameWindow;
+    }
 
     /**
      * &#064;description  用于水平居中手牌和自己打出的牌
@@ -317,25 +334,50 @@ public class gameWindowController {
         playButton.setDisable(true);
     }
 
-    void paint12PlayCard(AnchorPane anchorPane){
-        anchorPane.getChildren().clear();
-        int num = 10;
-        anchorPane.setPrefWidth(72.0);
-        anchorPane.setPrefHeight(68.0+34.0*num);
-        ImageView[] imageView = new ImageView[num];
-        for(int i = 0; i < num; i++){
-            int v = OtherPlayedCards.get(i).getSize();
-            int s = OtherPlayedCards.get(i).getSuit();
-            imageView[i] = new ImageView();
-            imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/Cards/" + s + (v+3) + ".png")));
+    void paint12PlayCard(){
+        //  清除原有子节点，方便刷新
+        OnPlayer.getChildren().clear();
+
+        if(OtherPlayedCards.isEmpty()){
+            ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/OtherPass.png")));
+        }else{
+            int num = 10;
+            OnPlayer.setPrefWidth(72.0);
+            OnPlayer.setPrefHeight(68.0+34.0*num);
+            ImageView[] imageView = new ImageView[num];
+            for(int i = 0; i < num; i++){
+                int v = OtherPlayedCards.get(i).getSize();
+                int s = OtherPlayedCards.get(i).getSuit();
+                imageView[i] = new ImageView();
+                imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/Cards/" + s + (v+3) + ".png")));
+            }
+            for(int i = 0; i < num; i++){
+                //  设置锚点
+                AnchorPane.setLeftAnchor(imageView[i],0.0);
+                AnchorPane.setTopAnchor(imageView[i],0.0+(34.0*i));
+                // 加入到打出的牌容器
+                OnPlayer.getChildren().addAll(imageView[i]);
+            }
         }
-        for(int i = 0; i < num; i++){
-            //  设置锚点
-            AnchorPane.setLeftAnchor(imageView[i],0.0);
-            AnchorPane.setTopAnchor(imageView[i],0.0+(34.0*i));
-            // 加入到打出的牌容器
-            anchorPane.getChildren().addAll(imageView[i]);
-        }
+
+        //  打印完后清空其他玩家打出的牌，方便后续接收
+        OtherPlayedCards.clear();
+        //  切换打出方
+        if(OnPlayer == playedCards1)
+            OnPlayer = playedCards2;
+        else
+            OnPlayer = playedCards1;
     }
 
+    private void paintBottomCard() {
+        int v = BottomCards.get(0).getSize();
+        int s = BottomCards.get(0).getSuit();
+        bottomCard1.setImage(new Image(getClass().getResourceAsStream("/images/Cards/" + s + (v+3) + ".png")));
+        v = BottomCards.get(1).getSize();
+        s = BottomCards.get(1).getSuit();
+        bottomCard2.setImage(new Image(getClass().getResourceAsStream("/images/Cards/" + s + (v+3) + ".png")));
+        v = BottomCards.get(2).getSize();
+        s = BottomCards.get(2).getSuit();
+        bottomCard3.setImage(new Image(getClass().getResourceAsStream("/images/Cards/" + s + (v+3) + ".png")));
+    }
 }
