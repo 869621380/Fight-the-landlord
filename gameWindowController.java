@@ -13,7 +13,7 @@ import javafx.scene.layout.*;
 import java.util.ArrayList;
 
 /**
- *                                   通过controller实例调用
+ *             通过controller实例调用
  * 公共属性：
  * isPlayed  public 是否出牌
  * Point     public 抢点数
@@ -23,6 +23,7 @@ import java.util.ArrayList;
  * setNowPoint 导入上一个人的抢点数
  * setDeck 导入上一个人的牌型
  * setAllButtonDisable 禁用所有按钮（不包括点击牌）
+ * getPlayedCards  获取所出的牌
  */
 
 public class gameWindowController {
@@ -147,7 +148,7 @@ public class gameWindowController {
     public void setBottomCard(ArrayList<Card> cards) {
         bottomCards.addAll(cards);
     }
-    public ArrayList<Card> getButtonCard() {
+    public ArrayList<Card> getPlayedCards() {
         return deck.getDeck();
     }
     public void setNowPoint(int Point){
