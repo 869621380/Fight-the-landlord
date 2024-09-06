@@ -35,12 +35,7 @@ public class gamePage {
             dealCard();
         }
         while (!snatchLandlord());
-        if(whoIsLord==1){
-            player1.receiveCard(receiveServeCard());
-        }
-        else if(whoIsLord==2)numOfPlayer3+=3;
-        else numOfPlayer3+=3;
-        playGame();
+        receiveButtonCard();
     }
 
     //开局发牌
@@ -70,9 +65,15 @@ public class gamePage {
             }
             else {
                 //不到本玩家抢地主的逻辑
-
+                int score=Integer.parseInt(String.valueOf(serverMessage.charAt(1)));
+                if(serverMessage.charAt(0)=='l'){
+                    //展示左侧玩家分数
+                }
+                else{
+                    //展示右侧玩家分数
+                }
                 //调用前端显示其他玩家的点数（未实现）
-                if(serverMessage.charAt(1) == '0'){
+                if(score==0){
                     noBark_num++;
                 }
             }
@@ -88,6 +89,18 @@ public class gamePage {
 //            isLord = true;
 //        }
         serverMessage=receiveMsg();
+        if(serverMessage.equals("you")){
+            player1.setIdentity(1);
+            whoIsLord=1;
+        }
+        else if(serverMessage.equals("l")){
+            whoIsLord=3;
+            player1.setIdentity(2);
+        }
+        else {
+            whoIsLord=2;
+            player1.setIdentity(2);
+        }
         return true;
     }
 
@@ -99,7 +112,7 @@ public class gamePage {
     }
 
     //出牌阶段
-    void playGame(){
+    public void playGame(){
 
     }
 
@@ -109,6 +122,17 @@ public class gamePage {
         if(cardCount==1||cardCount==2)
             return cardCount;
         return 0;
+    }
+
+    private void receiveButtonCard() throws IOException {
+        bottomCards=receiveServeCard();
+        //show bottomCard
+        if(whoIsLord==1) {
+            player1.receiveCard(bottomCards);
+            numOfPlayer2+=3;numOfPlayer3+=3;
+        }
+        else if(whoIsLord==2)numOfPlayer2+=3;
+        else numOfPlayer2+=3;
     }
 
     //接受客户端卡牌信息

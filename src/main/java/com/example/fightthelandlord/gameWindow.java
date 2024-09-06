@@ -25,10 +25,16 @@ public class gameWindow extends Application {
         //   通过 fxmlLoader.getController() 获取 GameWindowController 的实例。
         gameWindowController controller = fxmlLoader.getController();
 
-
         Scene scene = new Scene(root, 1200, 800);
         primaryStage.setTitle("gameWindow");
         primaryStage.setScene(scene);
+
+        // 设置窗口的最小和最大尺寸相同，以防止调整大小
+        primaryStage.setMinWidth(scene.getWidth());
+        primaryStage.setMaxWidth(scene.getWidth());
+        primaryStage.setMinHeight(scene.getHeight());
+        primaryStage.setMaxHeight(scene.getHeight());
+
         primaryStage.show();
     }
 

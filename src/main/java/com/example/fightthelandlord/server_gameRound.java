@@ -211,8 +211,8 @@ public class server_gameRound {
         }
         sendToOne(whoIsLord,"you");
         //上一玩家是2，下一玩家是1
-        sendToOne((whoIsLord+1)%3,"2");//上一玩家(手）
-        sendToOne((whoIsLord+2)%3,"1");//下一玩家(右手)
+        sendToOne((whoIsLord+1)%3,"l");//上一玩家(手）
+        sendToOne((whoIsLord+2)%3,"r");//下一玩家(右手)
 
         return true;
     }
