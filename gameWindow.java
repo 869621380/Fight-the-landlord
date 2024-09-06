@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.example.fightthelandlord.Controllers.gameWindowController;
 
+import java.io.IOException;
+
 /**
  *       gameWindow仅用于前端自己调试，后端所需仅看标注段落
  */
@@ -40,7 +42,6 @@ public class gameWindow extends Application {
         primaryStage.setMaxHeight(scene.getHeight());
 
         primaryStage.show();//  窗口输出
-
 
     }
 
