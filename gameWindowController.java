@@ -1,14 +1,14 @@
-package org.example.fight_the_landlord.Controllers;
+package com.example.fightthelandlord.Controllers;
 
+import com.example.fightthelandlord.Card;
+import com.example.fightthelandlord.Deck;
+import com.example.fightthelandlord.gameWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import org.example.fight_the_landlord.Card;
-import org.example.fight_the_landlord.Deck;
-import org.example.fight_the_landlord.gameWindow;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ public class gameWindowController {
     //   储存参数
     private Deck deck;
     public boolean isPlayed = false;
-    private int NowPoint = 0;
+    private int NowPoint = 1;
     public int Point = -1;
 
     ArrayList<Card> bottomCards;
@@ -31,7 +31,7 @@ public class gameWindowController {
     ArrayList<Card> PlayedCards = new ArrayList<>();//  用作出牌
     ArrayList<Card> OtherPlayedCards = new ArrayList<>();
 
-    public org.example.fight_the_landlord.gameWindow gameWindow;
+    public com.example.fightthelandlord.gameWindow gameWindow;
 
     //  各按钮
     public ImageView passButton;
@@ -81,35 +81,41 @@ public class gameWindowController {
         root.setBackground(new Background(backgroundImage));
 
         // 设置默认图片
-        userImage.setImage(new Image(getClass().getResourceAsStream("/images/defaultHeader.png")));
-        player1Image.setImage(new Image(getClass().getResourceAsStream("/images/GG.png")));
-        player2Image.setImage(new Image(getClass().getResourceAsStream("/images/MM.png")));
+        userImage.setImage(new Image(getClass().getResourceAsStream("/images/Header.png")));
+        player1Image.setImage(new Image(getClass().getResourceAsStream("/images/right.png")));
+        player2Image.setImage(new Image(getClass().getResourceAsStream("/images/left.png")));
         bottomCard1.setImage(new Image(getClass().getResourceAsStream("/images/poker_back.png")));
         bottomCard2.setImage(new Image(getClass().getResourceAsStream("/images/poker_back.png")));
         bottomCard3.setImage(new Image(getClass().getResourceAsStream("/images/poker_back.png")));
 
         // 设置出牌和不出按钮备用
-        passButton = new ImageView(new Image(getClass().getResourceAsStream("/images/pass.png")));
-        playButton = new ImageView(new Image(getClass().getResourceAsStream("/images/play.png")));
+        passButton = new ImageView(new Image(getClass().getResourceAsStream("/images/Button/pass.png")));
+        playButton = new ImageView(new Image(getClass().getResourceAsStream("/images/Button/play(false).png")));
         passButton.setOnMouseClicked(event -> Pass());
         playButton.setOnMouseClicked(event -> playCard());
         playButton.setDisable(true);
 
         // 设置抢地主按钮
-        qiangButton0 = new ImageView(new Image(getClass().getResourceAsStream("/images/0Point.png")));
-        qiangButton1 = new ImageView(new Image(getClass().getResourceAsStream("/images/1Point.png")));
-        qiangButton2 = new ImageView(new Image(getClass().getResourceAsStream("/images/2Point.png")));
-        qiangButton3 = new ImageView(new Image(getClass().getResourceAsStream("/images/3Point.png")));
+        qiangButton0 = new ImageView(new Image(getClass().getResourceAsStream("/images/Button/0Point.png")));
+        qiangButton1 = new ImageView(new Image(getClass().getResourceAsStream("/images/Button/1Point.png")));
+        qiangButton2 = new ImageView(new Image(getClass().getResourceAsStream("/images/Button/2Point.png")));
+        qiangButton3 = new ImageView(new Image(getClass().getResourceAsStream("/images/Button/3Point.png")));
         qiangButton0.setOnMouseClicked(event -> Qiang(0));
         qiangButton1.setOnMouseClicked(event -> Qiang(1));
         qiangButton2.setOnMouseClicked(event -> Qiang(2));
         qiangButton3.setOnMouseClicked(event -> Qiang(3));
-        if(NowPoint >= 1)
+        if(NowPoint >= 1){
             qiangButton1.setDisable(true);
-        else if (NowPoint >= 2)
+            qiangButton1.setImage(new Image(getClass().getResourceAsStream("/images/Button/1Point(false).png")));
+        }
+        else if (NowPoint >= 2){
             qiangButton2.setDisable(true);
-        else if(NowPoint >= 3)
+            qiangButton2.setImage(new Image(getClass().getResourceAsStream("/images/Button/2Point(false).png")));
+        }
+        else if(NowPoint >= 3){
             qiangButton3.setDisable(true);
+            qiangButton3.setImage(new Image(getClass().getResourceAsStream("/images/Button/3Point(false).png")));
+        }
         button.getChildren().addAll(qiangButton0,qiangButton1,qiangButton2,qiangButton3);
 
         // 打印手牌
@@ -184,6 +190,11 @@ public class gameWindowController {
             deck.add(HandCards.get(i));
             // 是否能出牌检测
             playButton.setDisable(!deck.check());
+            if(deck.check()){
+                playButton.setImage(new Image(getClass().getResourceAsStream("/images/Button/play.png")));
+            }else {
+                playButton.setImage(new Image(getClass().getResourceAsStream("/images/Button/play(false).png")));
+            }
         } else {
             // 牌下移
             AnchorPane.setTopAnchor(clickedImageView, 30.0);
@@ -191,6 +202,11 @@ public class gameWindowController {
             deck.delete(HandCards.get(i));
             // 是否能出牌检测
             playButton.setDisable(!deck.check());
+            if(deck.check()){
+                playButton.setImage(new Image(getClass().getResourceAsStream("/images/Button/play.png")));
+            }else {
+                playButton.setImage(new Image(getClass().getResourceAsStream("/images/Button/play(false).png")));
+            }
         }
     }
 
@@ -225,7 +241,7 @@ public class gameWindowController {
             int v = HandCards.get(i).getSize();
             int s = HandCards.get(i).getSuit();
             imageView[i] = new ImageView();
-            imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/" + s + (v+3) + ".png")));
+            imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/Cards/" + s + (v+3) + ".png")));
         }
         for(int i = 0; i < num; i++){
             //  设置锚点
@@ -250,7 +266,7 @@ public class gameWindowController {
             int v = PlayedCards.get(i).getSize();
             int s = PlayedCards.get(i).getSuit();
             imageView[i] = new ImageView();
-            imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/" + s + (v+3) + ".png")));
+            imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/Cards/" + s + (v+3) + ".png")));
         }
         for(int i = 0; i < num; i++){
             //  设置锚点
@@ -280,7 +296,7 @@ public class gameWindowController {
             int v = OtherPlayedCards.get(i).getSize();
             int s = OtherPlayedCards.get(i).getSuit();
             imageView[i] = new ImageView();
-            imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/" + s + (v+3) + ".png")));
+            imageView[i].setImage(new Image(getClass().getResourceAsStream("/images/Cards/" + s + (v+3) + ".png")));
         }
         for(int i = 0; i < num; i++){
             //  设置锚点

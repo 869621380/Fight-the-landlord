@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="1900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.fight_the_landlord.Controllers.gameWindowController">
+<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="1900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fightthelandlord.Controllers.gameWindowController">
    <children>
        <!-- 底牌区域 -->
        <HBox alignment="CENTER" layoutX="482.0" layoutY="14.0" prefHeight="100.0" prefWidth="223.0" spacing="10">
@@ -26,8 +26,8 @@
          <children>
          </children>
        </HBox>
-       <ImageView fx:id="player2Image" fitHeight="100" fitWidth="100" layoutX="14.0" layoutY="50.0" />
-       <ImageView fx:id="player1Image" fitHeight="100" fitWidth="100" layoutX="1086.0" layoutY="50.0" />
+       <ImageView fx:id="player2Image" fitHeight="161.0" fitWidth="72.0" layoutX="14.0" layoutY="50.0" />
+       <ImageView fx:id="player1Image" fitHeight="161.0" fitWidth="72.0" layoutX="1086.0" layoutY="50.0" />
        <AnchorPane fx:id="handCards" layoutY="650.0" />
        <AnchorPane fx:id="playedCards1" layoutX="150.0" layoutY="80.0" />
        <AnchorPane fx:id="playedCards2" layoutX="1000.0" layoutY="80.0" />

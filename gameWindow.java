@@ -1,11 +1,11 @@
-package org.example.fight_the_landlord;
+package com.example.fightthelandlord;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.fight_the_landlord.Controllers.gameWindowController;
+import com.example.fightthelandlord.Controllers.gameWindowController;
 
 public class gameWindow extends Application {
 
@@ -25,10 +25,16 @@ public class gameWindow extends Application {
         //   通过 fxmlLoader.getController() 获取 GameWindowController 的实例。
         gameWindowController controller = fxmlLoader.getController();
 
-
         Scene scene = new Scene(root, 1200, 800);
         primaryStage.setTitle("gameWindow");
         primaryStage.setScene(scene);
+
+        // 设置窗口的最小和最大尺寸相同，以防止调整大小
+        primaryStage.setMinWidth(scene.getWidth());
+        primaryStage.setMaxWidth(scene.getWidth());
+        primaryStage.setMinHeight(scene.getHeight());
+        primaryStage.setMaxHeight(scene.getHeight());
+
         primaryStage.show();
     }
 
