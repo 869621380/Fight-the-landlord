@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.example.fightthelandlord.Controllers.gameWindowController;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -36,10 +37,10 @@ public class gameWindow extends Application {
         /* 用于固定窗口大小，设置标题  */
         primaryStage.setTitle("gameWindow");
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(scene.getWidth());
-        primaryStage.setMaxWidth(scene.getWidth());
-        primaryStage.setMinHeight(scene.getHeight());
-        primaryStage.setMaxHeight(scene.getHeight());
+        primaryStage.initStyle(StageStyle.UTILITY); // 这种样式可以去掉大部分窗口装饰
+        primaryStage.setFullScreen(false);
+        primaryStage.setResizable(false);
+
 
         primaryStage.show();//  窗口输出
 
