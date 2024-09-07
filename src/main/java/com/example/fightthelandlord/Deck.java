@@ -43,7 +43,7 @@ public class Deck {
     
     //检验选中卡牌能否出牌
     public boolean check(){
-        System.out.println(toString());
+        System.out.println(this);
         //if(deck.size()==0)return false;
         //如果自己是首出牌进行首牌合理性检验
         if(lastType==0&& !deck.isEmpty())
@@ -108,20 +108,7 @@ public class Deck {
     public String toString(){
         String s="当前牌面";
         for(Card card:deck){
-            int size=card.getSize();
-            String alpha;
-            if(size<7)alpha= String.valueOf((char) ('3' +size));
-            else{
-                if(size==7)alpha="10";
-                else if(size==8)alpha="J";
-                else if(size==9)alpha="Q";
-                else if(size==10)alpha="K";
-                else if (size==11)alpha="A";
-                else if(size==12)alpha="2";
-                else if(size==13)alpha="Small Joker";
-                else alpha="Big Joker";
-            }
-            s+="["+alpha+","+card.getSuit()+"] ";
+            s+= card.getCardInfo();
         }
         return s;
     }

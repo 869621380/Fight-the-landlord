@@ -231,8 +231,9 @@ public class gameWindowController {
             // 加入到将打出的牌
             deck.add(HandCards.get(i));
             // 是否能出牌检测
-            playButton.setDisable(!deck.check());
-            if(deck.check()){
+            boolean check=deck.check();
+            playButton.setDisable(!check);
+            if(check){
                 playButton.setImage(new Image(getClass().getResourceAsStream("/images/Button/play.png")));
             }else {
                 playButton.setImage(new Image(getClass().getResourceAsStream("/images/Button/play(false).png")));

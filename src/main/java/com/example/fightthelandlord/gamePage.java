@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
 
-public class gamePage extends Application {
+public class gamePage{
     //斗地主游戏界面
     public gamePage() throws IOException {
         player1=new Player();
@@ -29,18 +29,21 @@ public class gamePage extends Application {
             this.out = new DataOutputStream(this.socket.getOutputStream());
             connectRight=true;
         } catch (IOException e) {
-            System.out.println("断开连接");//前端可以忽视
+            System.out.println("连接失败");//前端可以忽视
             connectRight=false;
         }
     }
 
     //开始游戏
-    public void gameStart() throws IOException, InterruptedException {
+    public void gameStart() throws Exception {
+        start(new Stage());
         System.out.println("waiting to start.....");
-       // String startMsg=in.readUTF();
-        //System.out.println(startMsg);
+        String startMsg=in.readUTF();
+        System.out.println(startMsg);
             //dealCard();
-            testDealCard();
+        //testDealCard();
+        controller.setHandCard(player1.getDeck());
+
     }
 
     //开局发牌
@@ -107,6 +110,7 @@ public class gamePage extends Application {
             whoIsLord=2;
             player1.setIdentity(2);
         }
+
         return true;
     }
     //出牌阶段
@@ -185,7 +189,6 @@ public class gamePage extends Application {
         //show bottomCard
         if(whoIsLord==1) {
             player1.receiveCard(bottomCards);
-            numOfPlayer2+=3;numOfPlayer3+=3;
         }
         else if(whoIsLord==2)numOfPlayer2+=3;
         else numOfPlayer2+=3;
@@ -229,6 +232,7 @@ public class gamePage extends Application {
     private String serverMessage;
     private boolean connectRight;
     private gameWindowController controller;
+
     void testDealCard(){
         ArrayList<Card> deck = new ArrayList<>();
         //创建一副牌,0表示3，13~小王，14~大王
@@ -270,8 +274,9 @@ public class gamePage extends Application {
         //打印玩家手牌
         System.out.println("player1's cards:");
         for (Card card : cards1) {
-            System.out.println(card.getCardInfo() + " ");
+            System.out.print(card.getCardInfo());
         }
+        System.out.println();
         player1.receiveCard(cards1);
     }
     public void start(Stage primaryStage) throws Exception {
@@ -296,12 +301,6 @@ public class gamePage extends Application {
         primaryStage.setMaxHeight(scene.getHeight());
 
         primaryStage.show();//  窗口输出
-        //if(!game.getConnectStatus()){
-        // primaryStage.close();
-        // }
-        gameStart();
-        controller.setHandCard(player1.getDeck());
-
 
     }
 

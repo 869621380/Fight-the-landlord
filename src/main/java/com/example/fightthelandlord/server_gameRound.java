@@ -469,17 +469,19 @@ public class server_gameRound {
         //打印玩家手牌
         System.out.println("player1's cards:");
         for (Card card : cards1) {
-            System.out.println(card.getCardInfo() + " ");
+            System.out.print(card.getCardInfo());
         }
+        System.out.println();
         System.out.println("player2's cards:");
         for (Card card : cards2) {
-            System.out.println(card.getCardInfo() + " ");
+            System.out.print(card.getCardInfo());
         }
+        System.out.println();
         System.out.println("player3's cards:");
         for (Card card : cards3) {
-            System.out.println(card.getCardInfo() + " ");
+            System.out.print(card.getCardInfo());
         }
-
+        System.out.println();
 //        players[0]=new Player(cards1);
 //        players[1]=new Player(cards2);
 //        players[2]=new Player(cards3);

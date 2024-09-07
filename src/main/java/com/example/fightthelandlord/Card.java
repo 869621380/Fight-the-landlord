@@ -20,7 +20,20 @@ public class Card implements Comparable<Card>{
     }
 
     public String getCardInfo() {
-        return cardElement.getKey().toString() + " " + cardElement.getValue().toString();
+        int size=cardElement.getKey();
+        String alpha;
+        if(size<7)alpha= String.valueOf((char) ('3' +size));
+        else{
+            if(size==7)alpha="10";
+            else if(size==8)alpha="J";
+            else if(size==9)alpha="Q";
+            else if(size==10)alpha="K";
+            else if (size==11)alpha="A";
+            else if(size==12)alpha="2";
+            else if(size==13)alpha="Small Joker";
+            else alpha="Big Joker";
+        }
+        return "["+alpha+","+cardElement.getValue()+"] ";
     }
 
     //实现可比较功能
