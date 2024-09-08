@@ -105,8 +105,10 @@ public class gameWindow extends Application {
         System.out.println("玩家抢点："+controller.Point);
         // 假设右手方不抢
         Platform.runLater(() -> controller.setOtherPoint("r0"));
+        Thread.sleep(2000);//  模拟抉择过程
         // 玩家固定获得地主
         Platform.runLater(() -> {
+            controller.setLandlord('m');
             controller.addBottomCard();
             controller.setPlayButton();
             // 刷新牌桌
@@ -123,17 +125,33 @@ public class gameWindow extends Application {
                 Thread.currentThread().interrupt();
             }
         }
+        // 任务完成后重置状态
+        controller.isPlayed = false;
+        // 获取前端出的牌
         ArrayList<Card> cards = controller.getPlayedCards();
         Deck deck = controller.getDeck();
         System.out.println();
+        // 假设第一次出的牌就是接下来其他玩家打的牌
         Platform.runLater(() -> {
             controller.setOtherPlayedCard('r',cards);
             controller.setOtherPlayedCard('l',cards);
             controller.setDeck(deck);
         });
         System.out.println("again");
+        // 开始第二轮出牌
         Platform.runLater(() -> controller.OnTurn());
-
+        // 等待isPlayed信号改变
+        while (!controller.isPlayed){
+            try{
+                Thread.sleep(10);
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+        }
+        // 游戏胜利
+        Platform.runLater(() -> {
+            controller.gameWin();
+        });
     }
 
     void testDealCard(){
