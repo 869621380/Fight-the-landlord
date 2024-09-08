@@ -7,9 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.example.fightthelandlord.Controllers.gameWindowController;
-import javafx.stage.StageStyle;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,12 +60,16 @@ public class gameWindow extends Application {
 
         //  额外新线程用于后端逻辑处理，与进行UI操作的JavaFX应用程序线程区分
         new Thread(() -> {
-             test();
+                try {
+                    test();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
         }).start();
     }
 
 
-    void test(){
+    void test() throws InterruptedException {
         /*
          ************模拟进程******************
          * 因UI操作都需在JavaFX应用程序线程中进行
@@ -76,9 +78,16 @@ public class gameWindow extends Application {
          */
         System.out.println("模拟开始");
         // 模拟抢地主
-        Platform.runLater(() -> controller.setOtherPoint("l1"));
+        // 假设左手方抢一点
+        Thread.sleep(2000);//  模拟抉择过程
+        Platform.runLater(() -> controller.setOtherPoint("l2"));
+
         // 玩家回合开始
-        Platform.runLater(() -> controller.OnTurn());
+        Platform.runLater(() -> {
+            controller.OnTurn();
+            controller.setQiangButton();
+        });
+        // 设置抢点按钮
         // 等待isPlayed信号改变
         while (!controller.isPlayed){
             try{
@@ -91,13 +100,15 @@ public class gameWindow extends Application {
         controller.isPlayed = false;
         // 回合结束，按钮禁用
         Platform.runLater(() -> controller.setAllButtonDisable());
+        Platform.runLater(() -> controller.clearButton());
 
         System.out.println("玩家抢点："+controller.Point);
+        // 假设右手方不抢
         Platform.runLater(() -> controller.setOtherPoint("r0"));
-        // 获得地主
+        // 玩家固定获得地主
         Platform.runLater(() -> {
             controller.addBottomCard();
-            controller.turnButton();
+            controller.setPlayButton();
             // 刷新牌桌
             controller.refresh();
         });
@@ -115,7 +126,6 @@ public class gameWindow extends Application {
         ArrayList<Card> cards = controller.getPlayedCards();
         Deck deck = controller.getDeck();
         System.out.println();
-        System.out.println(deck.getSize());
         Platform.runLater(() -> {
             controller.setOtherPlayedCard('r',cards);
             controller.setOtherPlayedCard('l',cards);
