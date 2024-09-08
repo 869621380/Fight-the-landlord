@@ -29,8 +29,8 @@
        <ImageView fx:id="player2Image" fitHeight="161.0" fitWidth="72.0" layoutX="14.0" layoutY="50.0" />
        <ImageView fx:id="player1Image" fitHeight="161.0" fitWidth="72.0" layoutX="1086.0" layoutY="50.0" />
        <AnchorPane fx:id="handCards" layoutY="650.0" />
-       <AnchorPane fx:id="playedCards1" layoutX="150.0" layoutY="80.0" />
-       <AnchorPane fx:id="playedCards2" layoutX="1000.0" layoutY="80.0" />
+       <AnchorPane fx:id="playedCards2" layoutX="150.0" layoutY="80.0" />
+       <AnchorPane fx:id="playedCards1" layoutX="900.0" layoutY="80.0" />
        <AnchorPane fx:id="playedCards" layoutY="450.0" />
    </children>
 
