@@ -5,6 +5,7 @@ import com.example.fightthelandlord.Deck;
 import com.example.fightthelandlord.gameWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
  * setDeck 导入上一个人的牌型
  * setOtherPlayedCard(char,ArrayList<Card>) 导入其他玩家出的牌(导入后自动Paint）
  * setFirstPlay 导入左右哪位其他玩家先出牌（左l 右r）
+ * setLandlord 导入谁是地主(char) 左l，右r，自己m
  * OnTurn 开始出牌阶段
  * setQiangButton 唤出抢点按钮
  * clearButton 清空所有按钮
@@ -31,7 +33,9 @@ import java.util.ArrayList;
  * getPlayedCards  获取所出的牌
  * getDeck 获取所处牌的牌型
  * addBottomCard 获得底牌加入手牌（获取后自动Paint增加后手牌）
- * refresh 刷新，可清空所有玩家出的牌
+ * refresh 刷新，可清空所有玩家出的牌或抢的点数
+ * gameWin 提示游戏胜利
+ * gameLose 提示游戏失败
  */
 
 public class gameWindowController {
@@ -150,6 +154,12 @@ public class gameWindowController {
     private ImageView bottomCard2;
     @FXML
     private ImageView bottomCard3;
+    @FXML
+    public ImageView landlord_l;
+    @FXML
+    public ImageView landlord_r;
+    @FXML
+    public ImageView landlord_m;
 
 
     @FXML
@@ -202,6 +212,7 @@ public class gameWindowController {
         HandCards.addAll(cards);
         // 打印手牌
         paintHandCard();
+        handCards.setLayoutX((root.getWidth() - handCards.getWidth()) / 2);
         Platform.runLater(() -> centerAnchorPane(handCards, root));
     }
     public void setBottomCard(ArrayList<Card> cards) {
@@ -266,7 +277,10 @@ public class gameWindowController {
         cardSorted(HandCards);
         // 打印手牌
         paintHandCard();
-        Platform.runLater(() -> centerAnchorPane(handCards, root));
+        Platform.runLater(() -> {
+            root.layout();
+            centerAnchorPane(handCards, root);
+        });
     }
     public void setOtherPlayedCard(char who,ArrayList<Card> otherPlayedCards){
         OtherPlayedCards.addAll(otherPlayedCards);
@@ -304,6 +318,28 @@ public class gameWindowController {
     public void refresh(){
         playedCards1.getChildren().clear();
         playedCards2.getChildren().clear();
+        playedCards.getChildren().clear();
+    }
+    public void setLandlord(char who){
+        if(who == 'l'){
+            landlord_l.setImage(new Image(getClass().getResourceAsStream("/images/Landlord.png")));
+        } else if (who == 'r'){
+            landlord_r.setImage(new Image(getClass().getResourceAsStream("/images/Landlord.png")));
+        } else if (who == 'm'){
+            landlord_m.setImage(new Image(getClass().getResourceAsStream("/images/Landlord.png")));
+        }
+    }
+    public void gameWin(){
+        ImageView iv;
+        if(landlord_m.getImage() != null){
+            iv = new ImageView(new Image(getClass().getResourceAsStream("/images/LandlordWin.png")));
+        }
+        else {
+            iv = new ImageView(new Image(getClass().getResourceAsStream("/images/FarmerWin.png")));
+        }
+        AnchorPane.setTopAnchor(iv,150.0);
+        AnchorPane.setLeftAnchor(iv,100.0);
+        root.getChildren().add(iv);
     }
 
 
@@ -346,7 +382,13 @@ public class gameWindowController {
         Point = i;
         // 显示自己抢点数
         ImageView iv = new ImageView(new Image(getClass().getResourceAsStream("/images/Point/Point" + Point +".png")));
-        handCards.getChildren().add(iv);
+        playedCards.getChildren().add(iv);
+        playedCards.setLayoutX((root.getWidth() - playedCards.getPrefWidth()) / 2);
+        Platform.runLater(() -> {
+            root.layout();
+            centerAnchorPane(handCards, root);
+        });
+
         // 清除抢点按钮
         button.getChildren().clear();
         isPlayed = true;
