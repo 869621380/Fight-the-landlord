@@ -22,7 +22,7 @@
            </children>
        </HBox>
        <ImageView fx:id="userImage" fitHeight="100" fitWidth="100" layoutX="64.0" layoutY="650.0" />
-       <HBox fx:id="button" alignment="BASELINE_CENTER" layoutX="399.0" layoutY="540.0" prefHeight="30.0" prefWidth="402.0" spacing="200.0" AnchorPane.bottomAnchor="230.0" AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="399.0" AnchorPane.topAnchor="540.0">
+       <HBox fx:id="button" alignment="BASELINE_CENTER" layoutX="399.0" layoutY="650.0" prefHeight="30.0" prefWidth="402.0" spacing="200.0" AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="399.0" AnchorPane.topAnchor="600.0">
          <children>
          </children>
        </HBox>
@@ -31,7 +31,10 @@
        <AnchorPane fx:id="handCards" layoutY="650.0" />
        <AnchorPane fx:id="playedCards2" layoutX="150.0" layoutY="80.0" />
        <AnchorPane fx:id="playedCards1" layoutX="900.0" layoutY="80.0" />
-       <AnchorPane fx:id="playedCards" layoutY="450.0" />
+       <AnchorPane fx:id="playedCards" layoutY="420.0" />
+      <ImageView fx:id="landlord_l" layoutX="14.0" layoutY="221.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="landlord_r" layoutX="1086.0" layoutY="221.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="landlord_m" layoutX="64.0" layoutY="590.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 
 
