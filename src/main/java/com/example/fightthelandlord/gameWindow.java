@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.example.fightthelandlord.Controllers.gameWindowController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,7 @@ public class gameWindow extends Application {
     ArrayList<Card> HandCards = new ArrayList<>();
     ArrayList<Card> BottomCards = new ArrayList<>();
 
+    Stage window;
     Scene scene;
     gameWindowController controller;
 
@@ -32,6 +34,7 @@ public class gameWindow extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        window = primaryStage;
         /**
          * scene对象可获取，controller用于和前端界面交换数据
          */
@@ -44,19 +47,6 @@ public class gameWindow extends Application {
 
         /* ******************************************* */
 
-        /* 用于固定窗口大小，设置标题  */
-        primaryStage.setTitle("gameWindow");
-        primaryStage.setScene(scene);
-//        primaryStage.initStyle(StageStyle.UTILITY); // 这种样式可以去掉大部分窗口装饰
-        primaryStage.setFullScreen(false);
-        primaryStage.setResizable(false);
-
-        //  模拟发牌
-        testDealCard();
-        controller.setHandCard(HandCards);
-        controller.setBottomCard(BottomCards);
-
-        primaryStage.show();//  窗口输出
 
         //  额外新线程用于后端逻辑处理，与进行UI操作的JavaFX应用程序线程区分
         new Thread(() -> {
@@ -64,12 +54,30 @@ public class gameWindow extends Application {
                     test();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
         }).start();
     }
 
 
-    void test() throws InterruptedException {
+    void test() throws InterruptedException, IOException {
+
+        /* 用于固定窗口大小，设置标题  */
+        Platform.runLater(() -> {
+            window.setScene(scene);
+//        primaryStage.initStyle(StageStyle.UTILITY); // 这种样式可以去掉大部分窗口装饰
+            window.setFullScreen(false);
+            window.setResizable(false);
+        });
+
+        //  模拟发牌
+        testDealCard();
+        controller.setHandCard(HandCards);
+        controller.setBottomCard(BottomCards);
+
+        Platform.runLater(() -> window.show());
+
         /*
          ************模拟进程******************
          * 因UI操作都需在JavaFX应用程序线程中进行
@@ -78,16 +86,15 @@ public class gameWindow extends Application {
          */
         System.out.println("模拟开始");
         // 模拟抢地主
+
         // 假设左手方抢一点
         Thread.sleep(2000);//  模拟抉择过程
         Platform.runLater(() -> controller.setOtherPoint("l2"));
 
-        // 玩家回合开始
         Platform.runLater(() -> {
-            controller.OnTurn();
+            // 设置抢点按钮
             controller.setQiangButton();
         });
-        // 设置抢点按钮
         // 等待isPlayed信号改变
         while (!controller.isPlayed){
             try{
@@ -98,25 +105,24 @@ public class gameWindow extends Application {
         }
         // 任务完成后重置状态
         controller.isPlayed = false;
-        // 回合结束，按钮禁用
-        Platform.runLater(() -> controller.setAllButtonDisable());
-        Platform.runLater(() -> controller.clearButton());
 
         System.out.println("玩家抢点："+controller.Point);
         // 假设右手方不抢
         Platform.runLater(() -> controller.setOtherPoint("r0"));
-        Thread.sleep(2000);//  模拟抉择过程
+        Thread.sleep(2000);//  展示抢点数
         // 玩家固定获得地主
         Platform.runLater(() -> {
             controller.setLandlord('m');
+            // 将底牌加入手牌并展示底牌
             controller.addBottomCard();
-            controller.setPlayButton();
-            // 刷新牌桌
-            controller.refresh();
+            controller.showBottomCard();
         });
+
         // 开始新回合
         System.out.println("Begin");
-        Platform.runLater(() -> controller.OnTurn());
+        Platform.runLater(() -> {
+            controller.OnTurn();
+        });
         // 等待isPlayed信号改变
         while (!controller.isPlayed){
             try{
@@ -127,10 +133,10 @@ public class gameWindow extends Application {
         }
         // 任务完成后重置状态
         controller.isPlayed = false;
+
         // 获取前端出的牌
         ArrayList<Card> cards = controller.getPlayedCards();
         Deck deck = controller.getDeck();
-        System.out.println();
         // 假设第一次出的牌就是接下来其他玩家打的牌
         Platform.runLater(() -> {
             controller.setOtherPlayedCard('r',cards);
@@ -139,7 +145,7 @@ public class gameWindow extends Application {
         });
         System.out.println("again");
         // 开始第二轮出牌
-        Platform.runLater(() -> controller.OnTurn());
+        Platform.runLater(() -> {controller.OnTurn();});
         // 等待isPlayed信号改变
         while (!controller.isPlayed){
             try{
@@ -148,9 +154,10 @@ public class gameWindow extends Application {
                 Thread.currentThread().interrupt();
             }
         }
-        // 游戏胜利
+
+        // 游戏结束
         Platform.runLater(() -> {
-            controller.gameWin();
+            controller.gameOver(false,true,false);
         });
     }
 
