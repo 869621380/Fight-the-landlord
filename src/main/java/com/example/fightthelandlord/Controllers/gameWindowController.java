@@ -2,13 +2,17 @@ package com.example.fightthelandlord.Controllers;
 
 import com.example.fightthelandlord.Card;
 import com.example.fightthelandlord.Deck;
-import com.example.fightthelandlord.gameWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 
@@ -22,19 +26,20 @@ import java.util.ArrayList;
  * setBottomCard 导入底牌
  * showBottomCard 展示底牌
  * setOtherPoint 导入其他玩家的抢点数
+ * setOtherRemain 导入其他玩家剩余的牌
  * setDeck 导入上一个人的牌型
  * setOtherPlayedCard(char,ArrayList<Card>) 导入其他玩家出的牌(导入后自动Paint）
  * setLandlord 导入谁是地主(char) 左l，右r，自己m
  * OnTurn 开始出牌阶段
  * setQiangButton 唤出抢点按钮
  * getPlayedCards  获取所出的牌
- * getDeck 获取所处牌的牌型
+ * getDeck 获取所出牌的牌型
  * addBottomCard 获得底牌加入手牌（获取后自动Paint增加后手牌）
- * gameWin 提示游戏胜利
- * gameLose 提示游戏失败
+ * gameOver 游戏结束，显示胜利或失败
  */
 
 public class gameWindowController {
+
 
     //   储存参数
     private Deck deck;
@@ -42,6 +47,7 @@ public class gameWindowController {
     private int NowPoint = 0;
     public int Point = -1;
     AnchorPane OnPlayer = new AnchorPane();
+
 
     //创建四个卡组
     ArrayList<Card> HandCards = new ArrayList<>();//  用作手牌
@@ -115,8 +121,6 @@ public class gameWindowController {
             }
     };
 
-    public com.example.fightthelandlord.gameWindow gameWindow;
-
     //  各按钮
     public ImageView passButton;
     public ImageView playButton;
@@ -156,7 +160,10 @@ public class gameWindowController {
     public ImageView landlord_r;
     @FXML
     public ImageView landlord_m;
-
+    @FXML
+    public TextFlow LeftRemain;
+    @FXML
+    public TextFlow RightRemain;
 
     @FXML
     private void initialize() {
@@ -257,7 +264,7 @@ public class gameWindowController {
         }
     }
     public void setDeck(Deck deck) {
-        this.deck = new Deck(deck.getDeckType(),deck.getSize(),deck.getNumber());
+        this.deck = new Deck(deck.getLastType(),deck.getLastSize(),deck.getLastNumber());
     }
     public Deck getDeck(){
         return deck;
@@ -288,13 +295,15 @@ public class gameWindowController {
         // 更改按钮
         button.getChildren().addAll(passButton,playButton);
         // 第一个出禁用Pass
-//        passButton.setDisable(false);
-//        if(deck.getDeckType() == 0){
-//            passButton.setDisable(true);
-//            passButton.setImage(new Image(getClass().getResourceAsStream("/GameWindowImages/Button/pass(false).png")));
-//        }
-        // 回合未开始，按钮禁用
+        passButton.setDisable(false);
+        passButton.setImage(new Image(getClass().getResourceAsStream("/GameWindowImages/Button/pass.png")));
+        if(deck.getLastType() == 0){
+            passButton.setDisable(true);
+            passButton.setImage(new Image(getClass().getResourceAsStream("/GameWindowImages/Button/pass(false).png")));
+        }
+        // 回合刚开始，按钮禁用
         playButton.setDisable(true);
+        playButton.setImage(new Image(getClass().getResourceAsStream("/GameWindowImages/Button/play(false).png")));
         // 即将出牌，启用手牌点击
         for(javafx.scene.Node node : handCards.getChildren()){
             node.setDisable(false);
@@ -311,6 +320,18 @@ public class gameWindowController {
         } else if (who == 'm'){
             landlord_m.setImage(new Image(getClass().getResourceAsStream("/GameWindowImages/Landlord.png")));
         }
+    }
+    public void setOtherRemain(int left,int right){
+        LeftRemain.getChildren().clear();
+        Text l =new Text(Integer.toString(left));
+        l.setFont(Font.font("Arial", FontWeight.BOLD, 30)); // 设置字体、粗细和大小
+        l.setFill(Color.WHITE);
+        LeftRemain.getChildren().add(l);
+        RightRemain.getChildren().clear();
+        Text r =new Text(Integer.toString(right));
+        r.setFont(Font.font("Arial", FontWeight.BOLD, 30)); // 设置字体、粗细和大小
+        r.setFill(Color.WHITE);
+        RightRemain.getChildren().add(r);
     }
     public void gameOver(Boolean left,Boolean me,Boolean right){
         Image win = new Image(getClass().getResourceAsStream("/GameWindowImages/Win.png"));
@@ -362,6 +383,13 @@ public class gameWindowController {
         }
         // 回合结束，清除按钮
         button.getChildren().clear();
+        // 刷新手牌打印
+        paintHandCard();
+        Platform.runLater(() -> {
+            //  重新计算所有布局。确保在进行布局调整之前，所有的布局都已经计算完成。
+            root.layout();
+            centerAnchorPane(handCards, root);
+        });
     }
 
     private void playCard() {
@@ -506,9 +534,6 @@ public class gameWindowController {
                 playedCards.getChildren().addAll(imageView[i]);
             }
         }
-
-        //重新禁用按钮
-        playButton.setDisable(true);
     }
 
     void paint12PlayCard(){
