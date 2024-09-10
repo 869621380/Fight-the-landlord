@@ -20,7 +20,7 @@ public class server_player {
             e.printStackTrace();
         }
         //-------------------------------------------应该是false，测试用true
-        this.isInGame = true;
+        this.isInGame = false;
     }
 
     public server_room getRoom() {
@@ -89,7 +89,9 @@ public class server_player {
 //        }
 //        return str.toString();
 //    }
-
+    public void removeCard(Card card){
+        playerCard.remove(card);
+    }
     public ArrayList<Card> getPlayerCard() {return playerCard;}
 
     public int getScore() {return score;}

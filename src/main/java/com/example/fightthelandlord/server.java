@@ -145,17 +145,19 @@ class playerMsg extends Thread {
     public void run() {
         try {
             //选择房间，未完成
-            rooms[0].addPlayer(player);//==========测试，记得调整
-            player.setRoom(rooms[0]);
+            //rooms[0].addPlayer(player);//==========测试，记得调整
+            //player.setRoom(rooms[0]);
             this.room = rooms[0];//==========测试，记得调整
             do {
+                System.out.println("等待其他玩家");
                 if (!player.isInGame())
                     //选择房间
                     this.room = selectRoom();
             }while (!gameReady(room));
 
-            //
+            this.room.decrease();
             if (server_room.n == 0){//一人的线程启动游戏线程
+                System.out.println("111111111111111111111111111");
                 server_room.n = 3;
                 new GameThread(room.getPlayers()).start();//start game
             }
@@ -172,8 +174,6 @@ class playerMsg extends Thread {
         rooms[0].addPlayer(player);
         player.setRoom(rooms[0]);
         return rooms[0];
-
-
     }
     //进入房间后准备
     public boolean gameReady(server_room room)
@@ -187,11 +187,22 @@ class playerMsg extends Thread {
 //            }
 //
 //        }
-        if(room.getNum() == 3)
-        {
-            return true;
+        //room.addPlayer(player);
+        while(true){
+            if(room.getNum() == 3)
+            {
+                System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+                player.sendMsg("start");//提示玩家开始游戏
+                player.receiveMsg();
+                return true;
+            }
+            try{
+                sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return false;
+
     }
     //获取房间人数
 
@@ -209,6 +220,7 @@ class GameThread extends Thread {
 
     public void run() {
         server_gameRound game = new server_gameRound(players);
+        System.out.println("222222222222222222222222222222222");
         game.gameStart();//开始一轮游戏
         for (server_player player: players){//游戏结束后,重新开三个玩家交流线程,依靠isInGame的flag跳过选择房间阶段,
             new playerMsg(player,player.getRoom()).start();//直接在房间的准备阶段
