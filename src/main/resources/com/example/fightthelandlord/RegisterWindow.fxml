@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fightthelandlord.Controllers.RegisterWindowControllers">
+    <children>
+        <ImageView fx:id="RegisterWindowBackgroundImageView" fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+            <children>
+                <AnchorPane layoutX="53.0" layoutY="162.0" prefHeight="224.0" prefWidth="495.0">
+                    <children>
+                        <ImageView fx:id="registerPasswordImageView" fitHeight="50.0" fitWidth="100.0" layoutX="40.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../../../../../../../usedImg/Button2.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="registerAccountImageView" fitHeight="50.0" fitWidth="100.0" layoutX="40.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../../../../../../../usedImg/Button2.png" />
+                            </image>
+                        </ImageView>
+                        <Label fx:id="registerAccountLabel" layoutX="62.0" layoutY="26.0" prefHeight="50.0" prefWidth="78.0" text="账号：" textFill="#fffdfd">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="registerPasswordLabel" layoutX="62.0" layoutY="93.0" prefHeight="50.0" prefWidth="78.0" text="密码：" textFill="#fffdfd">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <ImageView fx:id="registerAccountInputImageView" fitHeight="199.0" fitWidth="362.0" layoutX="110.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../../../../../../../斗地主游戏素材/textbox.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="registerPasswordInputImageView" fitHeight="199.0" fitWidth="362.0" layoutX="110.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../../../../../../../斗地主游戏素材/textbox.png" />
+                            </image>
+                        </ImageView>
+                        <TextField fx:id="registerAccountInputTextField" layoutX="187.0" layoutY="33.0" prefHeight="36.0" prefWidth="184.0" style="-fx-background-color: rgba(0,0,0,0);" />
+                        <PasswordField fx:id="registerAccountInputPasswordField" layoutX="187.0" layoutY="103.0" prefHeight="36.0" prefWidth="184.0" style="-fx-background-color: rgba(0,0,0,0);" />
+                        <ImageView fx:id="cancelButtonImageView" fitHeight="50.0" fitWidth="100.0" layoutX="127.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../../../../../../../usedImg/Button2.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="confirmButtonImageView" fitHeight="50.0" fitWidth="100.0" layoutX="279.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../../../../../../../usedImg/Button2.png" />
+                            </image>
+                        </ImageView>
+                        <Label fx:id="confirmButtonLabel" layoutX="301.0" layoutY="160.0" prefHeight="50.0" prefWidth="78.0" text="确认" textFill="#fffdfd">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="cancelButtonLabel" layoutX="148.0" layoutY="160.0" prefHeight="50.0" prefWidth="78.0" text="取消" textFill="#fffdfd">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Button fx:id="cancelButton" layoutX="131.0" layoutY="160.0" mnemonicParsing="false" onAction="#handleCancelButtonClick" prefHeight="50.0" prefWidth="92.0" style="-fx-background-color: rgba(0,0,0,0);" textFill="#fcfcfc">
+                            <font>
+                                <Font size="1.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="confirmButton1" layoutX="279.0" layoutY="160.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: rgba(0,0,0,0);" textFill="#fcfcfc">
+                            <font>
+                                <Font size="1.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

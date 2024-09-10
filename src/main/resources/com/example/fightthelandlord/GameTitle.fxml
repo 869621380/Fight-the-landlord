@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fightthelandlord.Controllers.GameTitleControllers">
+    <children>
+        <ImageView fx:id="GameTitleBackgroundImageView" fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../../../../../../../../../background/PW~GHMB)V%7D.png" />
+            </image></ImageView>
+        <AnchorPane prefHeight="800.0" prefWidth="1200.0">
+            <children>
+                <ImageView fx:id="startGamingBackgroundImageView" fitHeight="130.0" fitWidth="240.0" layoutX="506.0" layoutY="572.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../../../../../../斗地主游戏素材/images/Idle@2x.png" />
+                    </image></ImageView>
+                <ImageView fx:id="startGamingTextImageView" fitHeight="59.0" fitWidth="230.0" layoutX="527.0" layoutY="599.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../../../../../../斗地主游戏素材/images/startGame2.png" />
+                    </image>
+                </ImageView>
+                <Button fx:id="startGamingButton" layoutX="506.0" layoutY="572.0" mnemonicParsing="false" onAction="#handleEnterGameLobbyButtonClick" prefHeight="130.0" prefWidth="240.0" style="-fx-background-color: rgba(0,0,0,0);" />
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>
