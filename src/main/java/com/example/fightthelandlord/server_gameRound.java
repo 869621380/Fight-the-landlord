@@ -344,8 +344,6 @@
 //}
 package com.example.fightthelandlord;
 
-import javafx.application.Platform;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -389,26 +387,41 @@ public class server_gameRound {
         int i =whoIsLord;//记录谁是地主
         while(true){
             //接收出的牌
-            players.get(i).sendMsg("请你出牌");
+            sendToOne(i,"请你出牌");
             ArrayList<Card> r = receiveCard(i);
-            for(Card card:r){
-                players.get(i).removeCard(card);
+            if (r != null) {
+                for (Card x : players.get(i).getPlayerCard()) {
+                    Iterator<Card> rIterator = r.iterator();
+                    while (rIterator.hasNext()) {
+                        Card cardInR = rIterator.next();
+                        if ((x.getSize() == cardInR.getSize()) && (x.getSuit() == cardInR.getSuit())) {
+                            rIterator.remove();
+                            break; // Found and removed the matching card, break to avoid modifying list during iteration
+                        }
+                    }
+                }
             }
-
-            System.out.println("第"+(i+1)+":");
-            for (Card p: players.get(i).getPlayerCard()) {
-                System.out.print(p.getCardInfo());
-            }
-            System.out.println();
-            sendCardToAnotherTwo(i,r);//向玩家发送此玩家出的牌
-            if(players.get(i).getPlayerCard().isEmpty()){
-                System.out.println("游戏结束");//如果玩家出完牌了
+            if(players.get(i).getPlayerCard().isEmpty()){//如果玩家出完牌了
                 sendToAll("游戏结束");//提示游戏结束
+                if (i == whoIsLord){
+                    sendToOne(i,"1");
+                    sendToOne((i+1)%3,"2");//你左边的玩家赢了
+                    sendToAnotherTwo((i+2)%3,"3");//你右边的玩家赢了
+                }else{
+                    sendToAll("000");//========================未设置信号
+                }
                 break;
             }
+            System.out.println("第"+i+":");
+            for (Card p: players.get(i).getPlayerCard()) {
+                System.out.println(p.getSize()+p.getSuit());
+            }
+            sendCardToAnotherTwo(i,r);//向玩家发送此玩家出的牌
             i = ( i + 1 ) % 3;
         }
     }
+
+
 
 
     /**
@@ -476,7 +489,6 @@ public class server_gameRound {
         players.get(1).setPlayerCard(cards2);
         players.get(2).setPlayerCard(cards3);
         remain = bottomCards;
-        cardSorted(remain);
 //        for (int i = 0; i < 3; i++) {
 //            sendToOne(i, "游戏开始");
 //        }
@@ -505,47 +517,52 @@ public class server_gameRound {
 
         int noBark = 0;//都不叫,则重新发牌
         init();//初始化抢地主点数
-        boolean hasFind=false;
         for (int i = 0; i < 3; i++) {
             sendToOne(i, "抢地主");
-            String s= players.get(i).receiveMsg();
+            String s = sendToOne(i, tostring(n));
             players.get(i).setScore(Integer.parseInt(s));
-            System.out.println(i+1 +"号玩家抢了"+s+"分");
-
             if (s.equals("0")) {
                 noBark++;
+            }else {
+                n.remove(s);
             }
-            if(s.equals("3")){
-                whoIsLord=i;
-                sendToOne((i+1)%3,"l");//上一玩家(手）
-                sendToOne((i+2)%3,"r");//下一玩家(右手)
-                for (int j = 0; j < 3; j++) {
-                    sendCardToOne(j, remain);
-                }
-                System.out.println("send Bottom Card OK");
-                return true;
-            }
-            else{
-                sendToOne((i+1)%3, 'l'+s);//给右手玩家发送此玩家抢的点数
-                sendToOne((i+2)%3, 'r'+s);//给左手玩家发送此玩家抢的点数
-            }
+            sendToOne((i+1)%3, 'l'+s);//给右手玩家发送此玩家抢的点数
+            sendToOne((i+2)%3, 'r'+s);//给左手玩家发送此玩家抢的点数
         }
         if (noBark == 3){
             System.out.println("重新洗牌");
             return false;
         }
         //找出地主
-        for (int i = 0; i < 3; i++) {
+        for (int i = 1; i < 3; i++) {
             if (players.get(i).getScore() > players.get(whoIsLord).getScore()) {
                 whoIsLord = i;//i是地主
             }
         }
-        sendToOne(whoIsLord,"you");
-        sendToOne((whoIsLord+1)%3,"l");//上一玩家(手）
-        sendToOne((whoIsLord+2)%3,"r");
+//        for (int i = 0; i < 3; i++) {
+//            if (i == whoIsLord) {
+//                sendToOne(i, "you");
+//                sendCardToOne(i, remain);
+//            } else {
+//                //===================================信号未确定
+//                sendToOne(i, "" + whoIsLord );//给其他玩家说地主是谁和地主牌
+//                sendCardToOne(i, remain);
+//            }
+//        }
+
+        //发送底牌
         for (int i = 0; i < 3; i++) {
             sendCardToOne(i, remain);
         }
+        sendToOne(whoIsLord,"you");
+
+        //上一玩家是2，下一玩家是1
+        sendToOne((whoIsLord+1)%3,"2");//上一玩家(手）
+        sendToOne((whoIsLord+2)%3,"1");//下一玩家(右手)
+
+
+
+
         return true;
     }
 
@@ -638,20 +655,11 @@ public class server_gameRound {
      */
     public ArrayList<Card> receiveCard(int i) {
         ArrayList<Card>deck=new ArrayList<>();
-        String s=players.get(i).receiveMsg();
-        System.out.println("收到牌"+s);
-
-        String[] result = s.split(" ");
-        //非空处理，不加if报错
-        if(result.length!=1) {
-            for(int k=0;k<result.length;k+=2){
-            Card newCard=new Card(Integer.parseInt(result[k]),Integer.parseInt(result[k+1]));
+        String[] result = players.get(i).receiveMsg().split(" ");
+        for(int k=0;k<result.length;k+=2){
+            Card newCard=new Card(Integer.parseInt(result[i]),Integer.parseInt(result[i+1]));
             deck.add(newCard);
-        }}
-        String msg="";
-        for(Card card:deck)
-            msg+=card.getCardInfo();
-        System.out.println("已经收到上一玩家出牌"+msg);
+        }
         return deck;
     }
 
@@ -667,18 +675,16 @@ public class server_gameRound {
 //给除了i的其他两人发送卡牌
     public void sendCardToAnotherTwo(int i, ArrayList<Card> cards) {
         // 构建卡片信息的字符串
-        StringBuilder card_str = new StringBuilder("l ");
+        StringBuilder card_str = new StringBuilder();
         for (Card card : cards) {
-            card_str.append(card.getSize()).append(" ").append(card.getSuit()).append(" ");
+            card_str.append(card.getCardInfo());
         }
-        players.get((i+1)%3).sendMsg(card_str.toString());
-        card_str.replace(0,1,"r");
-        players.get((i+2)%3).sendMsg(card_str.toString());
+
         // 遍历所有玩家并发送消息，但排除当前玩家
-//        for (int j = 0; j < 3; j++) {
-//            if (j != i) {
-//                players.get(i).sendMsg(card_str.toString());
-//            }
-//        }
+        for (int j = 0; j < 3; j++) {
+            if (j != i) {
+                players.get(i).sendMsg(card_str.toString());
+            }
+        }
     }
 }

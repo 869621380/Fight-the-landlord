@@ -147,7 +147,7 @@ class playerMsg extends Thread {
             //选择房间，未完成
             //rooms[0].addPlayer(player);//==========测试，记得调整
             //player.setRoom(rooms[0]);
-            this.room = rooms[0];//==========测试，记得调整
+            //this.room = rooms[0];//==========测试，记得调整
             do {
                 System.out.println("等待其他玩家");
                 if (!player.isInGame())
@@ -171,42 +171,103 @@ class playerMsg extends Thread {
 
     //选择房间
     public server_room selectRoom() throws IOException {
-        rooms[0].addPlayer(player);
-        player.setRoom(rooms[0]);
-        return rooms[0];
+//        rooms[0].addPlayer(player);
+//        player.setRoom(rooms[0]);
+//        return rooms[0];
+        String message;
+        System.out.println("selecting room...");
+        while (true){
+            System.out.println(getRoomNum());
+            player.sendMsg(getRoomNum());
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            message = player.receiveMsg();
+            if (!message.equals("-1")){
+                int choice = Integer.parseInt(message);
+                if (rooms[choice].getNum() >= 3){
+                    player.sendMsg("full");//表示此房间人数已满
+                    player.receiveMsg();
+                } else {
+                    player.sendMsg("ok");//表示可以进入此房间
+                    player.receiveMsg();
+                    rooms[choice].addPlayer(player);//房间记录玩家
+                    player.setRoom(rooms[choice]);//记录玩家的房间
+                    return rooms[choice];
+                }
+            }
+        }
     }
+
+     //获取所有房间人数信息
+    public String getRoomNum(){
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            str.append(rooms[i].getNum());
+        }
+        return str.toString();
+    }
+
     //进入房间后准备
     public boolean gameReady(server_room room)
     {
-//        room.addPlayer(player);
-//        while (true){
-//            if(room.isStart()){
-//                player.sendMsg("start");
-//                player.receiveMsg();
-//                return true;
-//            }
-//
-//        }
-        //room.addPlayer(player);
-        while(true){
-            if(room.getNum() == 3)
-            {
+        String message;//玩家信息
+        room.setStart(false);
+        player.setInGame(false);//-----------调试用,应该为false
+
+        while(true){//与客户端交互，询问状态
+            if (room.isStart()){//房间开始
                 System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
                 player.sendMsg("start");//提示玩家开始游戏
                 player.receiveMsg();
                 return true;
+            }else{
+                player.sendMsg("ready?"+room.roomInfo(player));
+                System.out.println("ready?"+room.roomInfo(player));
             }
             try{
                 sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            }catch (InterruptedException e){
+                e.printStackTrace();
             }
+            message = player.receiveMsg();
+            if (message.equals("unready")){
+                room.removeReady(player);//设置房间的准备玩家的list
+                System.out.println("unready");
+            }
+            if (message.equals("ready")) {
+                room.addReady(player);
+                System.out.println("ready");
+            }
+            if (message.equals("quit")) {
+                player.sendMsg("quit");
+                player.receiveMsg();
+                room.removePlayer(player);//房间移除玩家
+                player.setRoom(null);//玩家移除房间
+                System.out.println("quit");
+                return false;//重新进入大厅阶段,选择房间
+            }
+//            if(room.getNum() == 3)
+//            {
+//                System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+//                player.sendMsg("start");//提示玩家开始游戏
+//                player.receiveMsg();
+//                return true;
+//            }
+//            try{
+//                sleep(10);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
         }
 
     }
-    //获取房间人数
-
 }
+
+
 //多线程
 class GameThread extends Thread {
     static int homeNum = 0;

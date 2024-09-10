@@ -28,6 +28,13 @@ public class server_room {
         num++;
     }
 
+    //移除玩家
+    public void removePlayer(server_player player) {
+        players.remove(player);//删除房间里的玩家
+        readyPlayer.remove(player);//准备中的玩家点击退出按钮后直接退出
+        num--;
+    }
+
     /**
 
      * @title: addReady
@@ -44,6 +51,38 @@ public class server_room {
         }
         if (readyPlayer.size() == 3) {
             this.start = true;//三人都准备则开始信号置true
+        }
+    }
+
+    //取消准备玩家
+    public void removeReady(server_player player) {
+        if (readyPlayer.contains(player)) {
+            readyPlayer.remove(player);
+            System.out.println("removed ready");
+        }
+    }
+
+    public String roomInfo(server_player player) {
+        if (this.num == 1) {
+            return "00";
+        } else if (this.num == 2) {
+            String i = "10";
+            for (server_player p : players) {
+                if (!p.equals(player) && readyPlayer.contains(p)) {
+                    i = "20";
+                    break; // 如果找到一个准备好的玩家，直接返回"20"
+                }
+            }
+            return i;
+        } else {
+            int n = 0;
+            StringBuilder i = new StringBuilder("11");
+            for (server_player p : players) {
+                if (!p.equals(player) && readyPlayer.contains(p)) {
+                    i.setCharAt(n++,'2');
+                }
+            }
+            return i.toString();
         }
     }
 

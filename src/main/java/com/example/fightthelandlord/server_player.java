@@ -33,16 +33,13 @@ public class server_player {
 
     public void setInGame(boolean isInGame) {this.isInGame = isInGame;}
 
+
     /**
-
      * @title: sendMsg
-
      * @description: 给玩家发送消息
      *
      * @param  s String
-
      * @return 无
-
      */
     public void sendMsg(String s){
         try {
@@ -89,9 +86,7 @@ public class server_player {
 //        }
 //        return str.toString();
 //    }
-    public void removeCard(Card card){
-        playerCard.remove(card);
-    }
+
     public ArrayList<Card> getPlayerCard() {return playerCard;}
 
     public int getScore() {return score;}
