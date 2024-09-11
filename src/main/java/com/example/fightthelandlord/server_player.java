@@ -101,4 +101,8 @@ public class server_player {
     public void setPlayerCard(ArrayList<Card> playerCard) {
         this.playerCard = playerCard;
     }
+
+    public void addCard(ArrayList<Card> card){
+        playerCard.addAll(card);
+    }
 }

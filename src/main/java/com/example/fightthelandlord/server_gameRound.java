@@ -519,6 +519,7 @@ public class server_gameRound {
                 whoIsLord=i;
                 sendToOne((i+1)%3,"l");//上一玩家(手）
                 sendToOne((i+2)%3,"r");//下一玩家(右手)
+                players.get(whoIsLord).addCard(remain);
                 for (int j = 0; j < 3; j++) {
                     sendCardToOne(j, remain);
                 }
@@ -543,6 +544,7 @@ public class server_gameRound {
         sendToOne(whoIsLord,"you");
         sendToOne((whoIsLord+1)%3,"l");//上一玩家(手）
         sendToOne((whoIsLord+2)%3,"r");
+        players.get(whoIsLord).addCard(remain);
         for (int i = 0; i < 3; i++) {
             sendCardToOne(i, remain);
         }
