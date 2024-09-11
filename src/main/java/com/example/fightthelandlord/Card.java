@@ -19,6 +19,7 @@ public class Card implements Comparable<Card>{
         return cardElement.getValue();
     }
 
+    //输出卡牌信息方便调试
     public String getCardInfo() {
         int size=cardElement.getKey();
         String alpha;
@@ -46,6 +47,19 @@ public class Card implements Comparable<Card>{
         }
         // 如果大小相同，再比较花色
         return Integer.compare(this.cardElement.getValue(), other.cardElement.getValue());
+    }
+
+    //判断相同
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true; // 同一对象
+        if (obj == null || getClass() != obj.getClass()) return false; // 类型检查
+        Card other = (Card) obj; // 强制转换
+        return this.cardElement.equals(other.cardElement); // 比较 cardElement
+    }
+    @Override
+    public int hashCode() {
+        return cardElement.hashCode(); // 使用 cardElement 的 hashCode
     }
 
     Pair<Integer, Integer>cardElement;

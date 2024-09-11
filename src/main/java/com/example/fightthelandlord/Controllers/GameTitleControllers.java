@@ -1,6 +1,7 @@
 package com.example.fightthelandlord.Controllers;
 import com.example.fightthelandlord.Player;
 import com.example.fightthelandlord.gamePage;
+import com.example.fightthelandlord.utils.MusicPlayer;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
@@ -51,6 +52,8 @@ public class GameTitleControllers {
         Image startGamingTextImage= new Image(getClass().getResourceAsStream("/images/startGame2.png"));
         startGamingTextImageView.setImage(startGamingTextImage);
 
+        String filePath = getClass().getResource("/GameTitleMusic.mp3").toExternalForm();
+        MusicPlayer.playMusic(filePath);
     }
 
     public void setPlayer(Player player) {
@@ -73,9 +76,10 @@ public class GameTitleControllers {
         secondController.setPlayer(player);
         secondController.setStage(newStage);
         page.setSecondController(secondController);
+        page.inGame = false;
         newStage.show();
-        inStartRoom = false;
         // 关闭当前窗口
         stage.hide();
+        MusicPlayer.stopMusic();
     }
 }

@@ -19,7 +19,7 @@ public class server_room {
     }
 
     /**
-     * @title: AssPlayer
+     * @title: AddPlayer
      * @description: 添加加入房间的玩家
      *
      */

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -21,17 +22,22 @@
                <ImageView fx:id="bottomCard3" fitHeight="102.0" fitWidth="72.0" />
            </children>
        </HBox>
-       <ImageView fx:id="userImage" fitHeight="100" fitWidth="100" layoutX="64.0" layoutY="650.0" />
-       <HBox fx:id="button" alignment="BASELINE_CENTER" layoutX="399.0" layoutY="540.0" prefHeight="30.0" prefWidth="402.0" spacing="200.0" AnchorPane.bottomAnchor="230.0" AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="399.0" AnchorPane.topAnchor="540.0">
+       <ImageView fx:id="userImage" fitHeight="100" fitWidth="100" layoutX="64.0" layoutY="680.0" />
+       <HBox fx:id="button" alignment="BASELINE_CENTER" layoutX="399.0" layoutY="650.0" prefHeight="30.0" prefWidth="402.0" spacing="200.0" AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="399.0" AnchorPane.topAnchor="600.0">
          <children>
          </children>
        </HBox>
-       <ImageView fx:id="player2Image" fitHeight="161.0" fitWidth="72.0" layoutX="14.0" layoutY="50.0" />
-       <ImageView fx:id="player1Image" fitHeight="161.0" fitWidth="72.0" layoutX="1086.0" layoutY="50.0" />
+       <ImageView fx:id="player2Image" fitHeight="220.0" fitWidth="140.0" layoutX="14.0" layoutY="50.0" />
+       <ImageView fx:id="player1Image" fitHeight="220.0" fitWidth="140.0" layoutX="1050.0" layoutY="50.0" />
        <AnchorPane fx:id="handCards" layoutY="650.0" />
-       <AnchorPane fx:id="playedCards1" layoutX="150.0" layoutY="80.0" />
-       <AnchorPane fx:id="playedCards2" layoutX="1000.0" layoutY="80.0" />
-       <AnchorPane fx:id="playedCards" layoutY="450.0" />
+       <AnchorPane fx:id="playedCards2" layoutX="200.0" layoutY="80.0" />
+       <AnchorPane fx:id="playedCards1" layoutX="900.0" layoutY="80.0" />
+       <AnchorPane fx:id="playedCards" layoutY="420.0" />
+      <ImageView fx:id="landlord_l" layoutX="14.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="landlord_r" layoutX="1086.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="landlord_m" layoutX="64.0" layoutY="620.0" pickOnBounds="true" preserveRatio="true" />
+      <TextFlow fx:id="LeftRemain" layoutX="14.0" prefHeight="40.0" prefWidth="72.0" />
+      <TextFlow fx:id="RightRemain" layoutX="1086.0" prefHeight="40.0" prefWidth="72.0" />
    </children>
 
 

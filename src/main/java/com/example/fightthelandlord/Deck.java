@@ -10,7 +10,7 @@ import java.util.TreeSet;
 3 三张  3
 4 三带一   4
 5 三带二   5
-6 顺子     5-11
+6 顺子     5-12
 7 连对     6 8 10 12 14 16
 8 三三     6
 9 三三带一一 8
@@ -26,21 +26,61 @@ import java.util.TreeSet;
 19 王炸 2
 */
 public class Deck {
-    //传入上一出牌人出牌信息
+
+    /**
+     * &#064;description:传入上一出牌人出牌信息
+     */
     public Deck(int lastType,int lastSize,int lastNumber){
         deck=new TreeSet<>();
         this.lastType=lastType;
         this.lastSize=lastSize;
         this.lastNumber=lastNumber;
     }
-    
-    //更新当前可出牌参数
-    void updateDate(int deckType,int size,int number){
+
+    /**
+     * &#064;description:传入卡组
+     */
+    public Deck(ArrayList<Card>cards){
+        this.deck=new TreeSet<>();
+        deck.addAll(cards);
+        lastType=0;lastSize=-1;lastNumber=-1;
+        //空牌传出0，-1，-1
+        if(deck.size()==0){
+           return;
+        }
+        else{
+            for(int i=1;i<=19;i++){
+                if(typeCheck(i)){
+                    System.out.println(i);
+                    lastNumber=cards.size();
+                    lastSize=cards.get(0).getSize();
+                    lastType=i;
+                    return;
+                }
+            }
+            lastType=0;
+        }
+
+    }
+
+    /**
+     * &#064;更新当前可出牌参数
+     */
+    public void updateDate(int deckType,int size,int number){
         this.deckType=deckType;
         this.size=size;
         this.number=number;
     }
-    
+
+    /**
+     * &#064;过牌
+     */
+    public void pass(){
+        deckType = lastType;
+        size = lastSize;
+        number = lastNumber;
+    }
+
     //检验选中卡牌能否出牌
     public boolean check(){
         System.out.println(this);
@@ -103,6 +143,9 @@ public class Deck {
     public ArrayList<Card> getDeck(){
         return new ArrayList<>(deck);
     }
+    public String getDeckLastInfo(){
+        return lastType+" "+lastSize+" "+lastNumber;
+    }
 
     //获取出牌文字信息
     public String toString(){
@@ -128,7 +171,6 @@ public class Deck {
         for(Card card:deck){
             cardSize[card.getSize()]++;
         }
-
         switch (type){
             //单张
             case 1:{
@@ -182,7 +224,10 @@ public class Deck {
                 boolean threeNumRight=false;
                 int size=-1;
                 for(int i=0;i<=14;i++){
-                    if(cardSize[i]==3)threeNumRight=true;
+                    if(cardSize[i]==3) {
+                        threeNumRight = true;
+                        size=i;
+                    }
                     else if(cardSize[i]==2)twoNumRight=true;
                 }
                 if((threeNumRight==twoNumRight)&&twoNumRight&&size>lastSize){
@@ -193,7 +238,7 @@ public class Deck {
             }
             //顺子5~11
             case 6:{
-                if(deck.size()<5||deck.size()>11)return false;
+                if(deck.size()<5||deck.size()>12)return false;
                 //不是首发
                 if(lastNumber!=-1&&deck.size()!=lastNumber)return false;
                 if(deck.last().getSize()>=12)return false;
@@ -215,13 +260,14 @@ public class Deck {
                 if(lastNumber!=-1&&deck.size()!=lastNumber)return false;
                 //奇数不可能是连对
                 if((deck.size()&1)==1)return false;
+                if(deck.size()>16||deck.size()<6)return false;
                 int firstSize=deck.first().getSize();
-                int size=deck.size(),temp=firstSize;
-                for(int i=0;i<size/2;i++){
-                    if(cardSize[temp]!=2){
-                        return false;
+                for(int i=0;i<14;i++){
+                    if(cardSize[i]==2){
+                        for(int j=i;j<i+deck.size()/2;j++){
+                            if(cardSize[i]!=2)return false;
+                        }
                     }
-                    temp++;
                 }
                 if(firstSize>lastSize){
                     updateDate(7,firstSize,size);
@@ -251,7 +297,7 @@ public class Deck {
                     //若三张的牌有两组且相连就是三三了
                     if(cardSize[i]==3){
                         if(cardSize[i+1]!=3)return false;
-                        else if(cardSize[i]>lastSize&&cardSize[13]!=cardSize[14]&&cardSize[13]!=1){
+                        else if(cardSize[i]>lastSize&&(!(cardSize[13]==cardSize[14]&&cardSize[13]==1))){
                             updateDate(9,i,8);
                             return true;
                         }
@@ -261,7 +307,7 @@ public class Deck {
             }
             //三三带二二
             case 10:{
-                if(deck.size()!=8)return false;
+                if(deck.size()!=10)return false;
                 int twoNumRight=0;
                 boolean threeNumRight=false;
                 int size=0;
@@ -288,7 +334,7 @@ public class Deck {
                 for(int i=0;i<13;i++){
                     if(cardSize[i]==3){
                         if(cardSize[i+1]==3&&cardSize[i+2]==3&&i>lastSize){
-                            updateDate(11,i,lastNumber);
+                            updateDate(11,i,12);
                             return true;
                         }
                         else return false;
@@ -421,14 +467,21 @@ public class Deck {
 
         return false;
     }
-
+    public int getLastType(){
+        return lastType;
+    }
+    public int getLastSize(){
+        return lastSize;
+    }
+    public int getLastNumber(){
+        return lastNumber;
+    }
     //出牌元素
     private final TreeSet<Card>deck;
-    
     //传入的上一次出牌的数据
-    private final int lastType;
-    private final int lastSize;
-    private final int lastNumber;
+    private  int lastType;
+    private  int lastSize;
+    private  int lastNumber;
     //将要传出的本次出牌的数据
     private int deckType;
     private int size;

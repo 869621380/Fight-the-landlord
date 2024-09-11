@@ -10,10 +10,7 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fightthelandlord.Controllers.LoginWindowControllers">
     <children>
-        <ImageView fx:id="loginBackgroundImageView" fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../../../../../../../../../background/ab4f616b-6685-4a4f-8a82-10afd2.png" />
-            </image></ImageView>
+        <ImageView fx:id="loginBackgroundImageView" fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
         <AnchorPane prefHeight="400.0" prefWidth="600.0">
             <children>
                 <AnchorPane layoutX="53.0" layoutY="165.0" prefHeight="224.0" prefWidth="495.0">
@@ -52,9 +49,9 @@
                         <PasswordField fx:id="loginAccountInputPasswordField" layoutX="187.0" layoutY="103.0" prefHeight="36.0" prefWidth="184.0" style="-fx-background-color: rgba(0,0,0,0);" />
                         <ImageView fx:id="loginButtonImageView" fitHeight="50.0" fitWidth="100.0" layoutX="127.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../../../../../../../../usedImg/Button2.png" />
-                            </image>
-                        </ImageView>
+                                <Image url="@../..//usedImg/Button2.png" />
+                            </image></ImageView>
+
                         <ImageView fx:id="registerButtonImageView" fitHeight="50.0" fitWidth="100.0" layoutX="279.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@../../../../../../../../../usedImg/Button2.png" />
@@ -82,3 +79,5 @@
         </AnchorPane>
     </children>
 </StackPane>
+
+

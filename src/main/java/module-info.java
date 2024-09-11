@@ -1,6 +1,9 @@
-module com.example.fightthelandlord {
+module org.example.fight_the_landlord {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
+    requires java.desktop;
+    requires java.sql;
 
 
     opens com.example.fightthelandlord to javafx.fxml;

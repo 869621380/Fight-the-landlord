@@ -13,6 +13,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.util.ArrayList;
 
@@ -48,6 +50,8 @@ public class gameWindowController {
     public int Point = -1;
     AnchorPane OnPlayer = new AnchorPane();
 
+    MediaPlayer soundPlayer;
+    MediaPlayer BackgroundPlayer;
 
     //创建四个卡组
     ArrayList<Card> HandCards = new ArrayList<>();//  用作手牌
@@ -203,6 +207,10 @@ public class gameWindowController {
         qiangButton2.setOnMouseClicked(event -> Qiang(2));
         qiangButton3.setOnMouseClicked(event -> Qiang(3));
 
+        Media sound2 = new Media(getClass().getResource("/GameWindowSounds/see you again.mp3").toExternalForm());
+        BackgroundPlayer = new MediaPlayer(sound2);
+        BackgroundPlayer.setVolume(0.3);
+        BackgroundPlayer.play();
     }
 
 
@@ -234,6 +242,12 @@ public class gameWindowController {
         playedCards1.getChildren().clear();
         playedCards2.getChildren().clear();
         playedCards.getChildren().clear();
+
+        BackgroundPlayer.stop();
+        Media sound2 = new Media(getClass().getResource("/GameWindowSounds/1111.mp3").toExternalForm());
+        BackgroundPlayer = new MediaPlayer(sound2);
+        BackgroundPlayer.setVolume(0.2);
+        BackgroundPlayer.play();
     }
     public ArrayList<Card> getPlayedCards() {
         ArrayList<Card> list = new ArrayList<>(PlayedCards);
@@ -345,11 +359,15 @@ public class gameWindowController {
             playedCards.getChildren().add(new ImageView(win));
             playedCards.setPrefWidth(win.getWidth());
             playedCards.setPrefHeight(win.getHeight());
+            BackgroundPlayer.stop();
+            Media sound = new Media(getClass().getResource("/GameWindowSounds/hehe.mp3").toExternalForm());
         }
         else{
             playedCards.getChildren().add(new ImageView(lose));
             playedCards.setPrefWidth(lose.getWidth());
             playedCards.setPrefHeight(lose.getHeight());
+            BackgroundPlayer.stop();
+            Media sound = new Media(getClass().getResource("/GameWindowSounds/aminos.mp3").toExternalForm());
         }
         if(right)
             playedCards1.getChildren().add(new ImageView(win));
@@ -363,6 +381,11 @@ public class gameWindowController {
         }
         root.layout();
         AnchorPane.setLeftAnchor(playedCards,(root.getWidth() - playedCards.getWidth()) / 2.0) ;
+        // 播放音效
+        BackgroundPlayer.stop();
+        Media sound = new Media(getClass().getResource("/GameWindowSounds/hehe.mp3").toExternalForm());
+        soundPlayer = new MediaPlayer(sound);
+        soundPlayer.play();
     }
 
     private void Pass() {
@@ -390,6 +413,9 @@ public class gameWindowController {
             root.layout();
             centerAnchorPane(handCards, root);
         });
+        Media sound = new Media(getClass().getResource("/GameWindowSounds/ZhuangBi.mp3").toExternalForm());
+        soundPlayer = new MediaPlayer(sound);
+        soundPlayer.play();
     }
 
     private void playCard() {
@@ -416,6 +442,10 @@ public class gameWindowController {
         }
         // 回合结束，清除按钮
         button.getChildren().clear();
+        // 播放音效
+        Media sound = new Media(getClass().getResource("/GameWindowSounds/manbo.mp3").toExternalForm());
+        soundPlayer = new MediaPlayer(sound);
+        soundPlayer.play();
     }
 
     private void Qiang(int i) {
@@ -433,6 +463,17 @@ public class gameWindowController {
         // 清除抢点按钮
         button.getChildren().clear();
         isPlayed = true;
+
+
+        if(Point == 0){
+            Media sound2 = new Media(getClass().getResource("/GameWindowSounds/Man.mp3").toExternalForm());
+            soundPlayer = new MediaPlayer(sound2);
+            soundPlayer.play();
+        }else {
+            Media sound2 = new Media(getClass().getResource("/GameWindowSounds/what.mp3").toExternalForm());
+            soundPlayer = new MediaPlayer(sound2);
+            soundPlayer.play();
+        }
     }
 
     /**
@@ -543,6 +584,9 @@ public class gameWindowController {
         if(OtherPlayedCards.isEmpty()){
             ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/GameWindowImages/OtherPass.png")));
             OnPlayer.getChildren().add(imageView);
+            Media sound = new Media(getClass().getResource("/GameWindowSounds/ZhuangBi.mp3").toExternalForm());
+            soundPlayer = new MediaPlayer(sound);
+            soundPlayer.play();
         }else{
             int num = OtherPlayedCards.size();
             OnPlayer.setPrefWidth(72.0);
@@ -561,6 +605,9 @@ public class gameWindowController {
                 // 加入到打出的牌容器
                 OnPlayer.getChildren().addAll(imageView[i]);
             }
+            Media sound = new Media(getClass().getResource("/GameWindowSounds/manbo.mp3").toExternalForm());
+            soundPlayer = new MediaPlayer(sound);
+            soundPlayer.play();
         }
 
         //  打印完后清空其他玩家打出的牌，方便后续接收
