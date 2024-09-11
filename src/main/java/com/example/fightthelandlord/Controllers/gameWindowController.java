@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -48,6 +49,7 @@ public class gameWindowController {
     public boolean isPlayed = false;
     private int NowPoint = 0;
     public int Point = -1;
+    public Stage stage;
     AnchorPane OnPlayer = new AnchorPane();
 
     MediaPlayer soundPlayer;
@@ -58,6 +60,10 @@ public class gameWindowController {
     ArrayList<Card> PlayedCards = new ArrayList<>();//  用作出牌
     ArrayList<Card> OtherPlayedCards = new ArrayList<>();//  用作其他玩家出牌
     ArrayList<Card> BottomCards = new ArrayList<>();//   用作底牌
+
+    public void close(){
+        stage.close();
+    }
 
     //图片储存
     final Image[][] Cards = {

@@ -25,7 +25,7 @@ public class gamePage {
         socket = new Socket();
         try {
 //            String ip = "192.168.3.9";//服务器ip
-            String ip = "127.0.0.1";//本地ip
+            String ip = "192.168.157.201";//本地ip
             InetSocketAddress socketAddress = new InetSocketAddress(ip, 8888);
             this.socket.connect(socketAddress);
             System.out.println("接入成功");//前端可以忽视
@@ -274,6 +274,11 @@ public class gamePage {
                     receiveButtonCard();
 
                     gameRound();
+                    sleep(8000);
+                    Platform.runLater(()->{
+                        controller.close();
+                    });
+                    gameRound();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -346,10 +351,10 @@ public class gamePage {
                             Platform.runLater(()->{controller.gameOver(true,true,false);});
                         }
                     }
-                    else{
+                    else{//地主三号
                         if(player1.getCardCount()==0){
-                            //1,3赢
-                            Platform.runLater(()->{controller.gameOver(true,true,false);});
+                            //2,3赢
+                            Platform.runLater(()->{controller.gameOver(false,true,true);});
                         }
                         else if(numOfPlayer2==0){
                             //1,2赢
@@ -510,11 +515,13 @@ public class gamePage {
         Parent root = fxmlLoader.load();
         //   通过 fxmlLoader.getController() 获取 GameWindowController 的实例。
         controller = fxmlLoader.getController();
+        controller.stage = primaryStage;
         Scene scene = new Scene(root, 1200, 800);
         /* ******************************************* */
         /* 用于固定窗口大小，设置标题  */
         primaryStage.setTitle("gameWindow");
         primaryStage.setScene(scene);
+
 //        primaryStage.initStyle(StageStyle.UTILITY); // 这种样式可以去掉大部分窗口装饰
         primaryStage.setFullScreen(false);
         primaryStage.setResizable(false);
